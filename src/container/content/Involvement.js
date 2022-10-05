@@ -11,6 +11,7 @@ function addPerson (event) {
         option = document.createElement('option');
 
     option.innerText = 'Владислав Омеляненко';
+    select.className = 'm-2';
     select.append(option);
     element.append(select);
 }
@@ -93,7 +94,7 @@ export default function Involvement () {
                             <div className='grid grid-cols-1 border-4 m-5 p-5'>
                                 <div id='personnel' className='flex flex-col'>
                                     <p>Залучений особовий склад</p>
-                                    <select>
+                                    <select className='m-2'>
                                         <option>Сергій Бондарюк</option>
                                         <option>Михайло Ігнатко</option>
                                     </select>
