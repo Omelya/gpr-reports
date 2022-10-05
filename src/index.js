@@ -1,12 +1,46 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
+import Main from "./container/Main";
+import Involvement, {action as sendAction} from "./container/content/Involvement";
+import Report from "./container/content/Report";
+import Overview from "./container/content/Overview";
 import reportWebVitals from './reportWebVitals';
+import {
+    createBrowserRouter,
+    RouterProvider,
+} from "react-router-dom";
+
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <App/>,
+        children: [
+            {
+                index: true,
+                element: <Main/>
+            },
+            {
+                path: "/involvement",
+                element: <Involvement/>,
+                action: sendAction
+            },
+            {
+                path: "/report",
+                element: <Report/>,
+            },
+            {
+                path: "/overview",
+                element: <Overview/>,
+            },
+        ]
+    },
+]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router}/>
   </React.StrictMode>
 );
 
