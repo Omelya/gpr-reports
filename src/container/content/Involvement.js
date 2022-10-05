@@ -5,6 +5,16 @@ export async function action () {
     await sendEngagementData();
 }
 
+function addPerson (event) {
+    let element = document.getElementById('personnel'),
+        select = document.createElement('select'),
+        option = document.createElement('option');
+
+    option.innerText = 'Владислав Омеляненко';
+    select.append(option);
+    element.append(select);
+}
+
 export default function Involvement () {
     return (
         <>
@@ -58,31 +68,41 @@ export default function Involvement () {
                                         </option>
                                     </select>
                                 </div>
-                                <div className='flex'>
+                                <div>
                                     <div className='flex flex-col p-1'>
                                         <label className='text-center'>Місце виконання</label>
                                         <input type='text' className='form-input'/>
                                     </div>
-                                    <div className='flex flex-col p-1'>
-                                        <p className='text-center'>Координати</p>
-                                        <div className='flex ml-5'>
-                                            <div className='flex items-center ml-5'>
-                                                <label className='pr-4'>N</label>
-                                                <input type='text' className='form-input'/>
-                                            </div>
-                                            <div className='flex items-center ml-5'>
-                                                <label className='pr-4'>E</label>
-                                                <input type='text' className='form-input'/>
-                                            </div>
+                                </div>
+                                <div className='flex flex-col p-1'>
+                                    <p className='text-center'>Координати</p>
+                                    <div className='flex ml-5'>
+                                        <div className='flex items-center ml-5'>
+                                            <label className='pr-4'>N</label>
+                                            <input type='text' className='form-input'/>
+                                        </div>
+                                        <div className='flex items-center ml-5'>
+                                            <label className='pr-4'>E</label>
+                                            <input type='text' className='form-input'/>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div>
-                            <p>Залучений особовий склад</p>
-                            <div>
-                                <input type='text' className='form-input'/>
+                        <div className='flex'>
+                            <div className='grid grid-cols-1 border-4 m-5 p-5'>
+                                <div id='personnel' className='flex flex-col'>
+                                    <p>Залучений особовий склад</p>
+                                    <select>
+                                        <option>Сергій Бондарюк</option>
+                                        <option>Михайло Ігнатко</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <button onClick={(e) => addPerson(e)}>
+                                        Добавити сапера
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div>
