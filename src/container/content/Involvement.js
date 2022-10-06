@@ -110,7 +110,7 @@ export default function Involvement () {
                                     </select>
                                 </div>
                             </div>
-                            <div className='grid grid-cols-2 border-4 m-5 p-5'>
+                            <div className='grid grid-rows-3 grid-flow-col border-4 m-5 p-5'>
                                 <div className='flex flex-col p-1'>
                                     <label className='text-center'>Дата та час отримання залучення</label>
                                     <div className='text-center'>
