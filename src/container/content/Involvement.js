@@ -5,8 +5,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import {useState} from "react";
 
 export async function action ({request, params}) {
-    let data = document.getElementById('report');
-    console.log(new FormData(data).get('date_of_notification'));
+    let data = document.getElementById('report'),
+        formData = new FormData(data);
+
     await sendEngagementData();
 }
 
@@ -30,9 +31,11 @@ function addFields () {
 
     div.className = 'grid grid-cols-2';
     select.className = 'm-2';
+    select.name = 'name_ammunition';
     option.innerText = 'Граната Ф-1';
     input.className = 'form-input m-2 number'
     input.type = 'text';
+    input.name = 'number_ammunition';
     input.addEventListener('change', numberAmmunition, false);
 
     select.append(option);
@@ -53,7 +56,19 @@ function numberAmmunition () {
 }
 
 export default function Involvement () {
+        const [dateReport, setDateReport] = useState(
+        new Date()
+    );
+
+    const [dateReceipt, setDateReceipt] = useState(
+        new Date()
+    );
+
     const [startDate, setStartDate] = useState(
+        new Date()
+    );
+
+    const [endDate, setEndDate] = useState(
         new Date()
     );
 
@@ -77,11 +92,11 @@ export default function Involvement () {
                                     <label className='text-center'>Дата донесення</label>
                                     <div className='text-center'>
                                         <DatePicker
-                                            selected={startDate}
-                                            onChange={(date) => setStartDate(date)}
+                                            selected={dateReport}
+                                            onChange={(date) => setDateReport(date)}
                                             timeInputLabel="Time:"
                                             showTimeInput
-                                            dateFormat="MMMM d, yyyy HH:MM"
+                                            dateFormat="MMMM d, yyyy hh:mm"
                                             name='date_of_notification'
                                         />
                                     </div>
@@ -115,11 +130,11 @@ export default function Involvement () {
                                     <label className='text-center'>Дата та час отримання залучення</label>
                                     <div className='text-center'>
                                         <DatePicker
-                                            selected={startDate}
-                                            onChange={(date) => setStartDate(date)}
+                                            selected={dateReceipt}
+                                            onChange={(date) => setDateReceipt(date)}
                                             timeInputLabel="Time:"
                                             showTimeInput
-                                            dateFormat="MMMM d, yyyy HH:MM"
+                                            dateFormat="MMMM d, yyyy hh:mm"
                                             name='date_of_notification'
                                         />
                                     </div>
@@ -132,7 +147,7 @@ export default function Involvement () {
                                             onChange={(date) => setStartDate(date)}
                                             timeInputLabel="Time:"
                                             showTimeInput
-                                            dateFormat="MMMM d, yyyy HH:MM"
+                                            dateFormat="MMMM d, yyyy hh:mm"
                                             name='date_of_notification'
                                         />
                                     </div>
@@ -141,11 +156,11 @@ export default function Involvement () {
                                     <label className='text-center'>Дата та час закінчення робіт</label>
                                     <div className='text-center'>
                                         <DatePicker
-                                            selected={startDate}
-                                            onChange={(date) => setStartDate(date)}
+                                            selected={endDate}
+                                            onChange={(date) => setEndDate(date)}
                                             timeInputLabel="Time:"
                                             showTimeInput
-                                            dateFormat="MMMM d, yyyy HH:MM"
+                                            dateFormat="MMMM d, yyyy hh:mm"
                                             name='date_of_notification'
                                         />
                                     </div>
@@ -172,7 +187,7 @@ export default function Involvement () {
                                 </div>
                                 <div className='flex flex-col p-1'>
                                     <p className='text-center'>Координати</p>
-                                    <div className='flex ml-5'>
+                                    <div className='flex justify-center ml-5'>
                                         <div className='flex items-center ml-5'>
                                             <label className='pr-4'>N</label>
                                             <input type='text' className='form-input'/>
@@ -209,13 +224,14 @@ export default function Involvement () {
                                     <p className='text-center'>Виявлені ВНП</p>
                                     <div className='flex flex-col' id='ammunition'>
                                         <div className='grid grid-cols-2'>
-                                            <select className='m-2'>
+                                            <select className='m-2' name='name_ammunition'>
                                                 <option>Протитанкова міна ТМ-56</option>
                                                 <option>Протитанкова міна ТМ-72</option>
                                             </select>
                                             <input
                                                 type='text'
                                                 className='form-input m-2 number'
+                                                name='number_ammunition'
                                                 onChange={() => numberAmmunition()}
                                             />
                                         </div>
