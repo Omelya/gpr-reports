@@ -56,7 +56,7 @@ function numberAmmunition () {
 }
 
 export default function Involvement () {
-        const [dateReport, setDateReport] = useState(
+    const [dateReport, setDateReport] = useState(
         new Date()
     );
 
@@ -71,25 +71,66 @@ export default function Involvement () {
     const [endDate, setEndDate] = useState(
         new Date()
     );
+    let year = new Date().getFullYear();
 
     return (
         <>
             <div>
-                <div>Fill out the form</div>
+                <div className='text-center mt-2'>
+                    <h3 className='font-serif font-bold text-2xl'>Fill out the form</h3>
+                </div>
                 <div>
                     <Form method="post" id='report'>
                         <div className='flex flex-col'>
                             <div className='grid grid-cols-2 border-4 m-5 p-5'>
                                 <div className='flex flex-col p-1'>
-                                    <label className='text-center'>Номер акта</label>
-                                    <input type='text' className='form-input' name='act_number'/>
+                                    <label className='text-center font-serif'>Номер акта</label>
+                                    <div className='flex items-center justify-center'>
+                                        <p className='font-serif'>
+                                            <select>
+                                                <option>
+                                                    ОР
+                                                </option>
+                                                <option>
+                                                    ГР
+                                                </option>
+                                                <option>
+                                                    ТО
+                                                </option>
+                                                <option>
+                                                    НР
+                                                </option>
+                                            </select>
+                                            -08-{year}/
+                                        </p>
+                                        <input type='text' className='form-input w-1/12' name='act_number'/>
+                                    </div>
                                 </div>
-                                <div className='flex flex-col p-1'>
+                                <div className='flex flex-col p-1 font-serif'>
                                     <label className='text-center'>Номер донесення</label>
-                                    <input type='text' className='form-input' name='report_number'/>
+                                    <div className='flex items-center justify-center'>
+                                        <p>
+                                            <select>
+                                                <option>
+                                                    ОР
+                                                </option>
+                                                <option>
+                                                    ГР
+                                                </option>
+                                                <option>
+                                                    ТО
+                                                </option>
+                                                <option>
+                                                    НР
+                                                </option>
+                                            </select>
+                                            -08-{year}/
+                                        </p>
+                                        <input type='text' className='form-input w-1/12' name='report_number'/>
+                                    </div>
                                 </div>
                                 <div className='flex flex-col p-1'>
-                                    <label className='text-center'>Дата донесення</label>
+                                    <label className='text-center font-serif'>Дата донесення</label>
                                     <div className='text-center'>
                                         <DatePicker
                                             selected={dateReport}
@@ -101,7 +142,7 @@ export default function Involvement () {
                                         />
                                     </div>
                                 </div>
-                                <div className='flex flex-col p-1'>
+                                <div className='flex flex-col p-1 font-serif'>
                                     <label className='text-center'>Тип завдання</label>
                                     <select name='task_type'>
                                         <option>
@@ -125,7 +166,7 @@ export default function Involvement () {
                                     </select>
                                 </div>
                             </div>
-                            <div className='grid grid-rows-3 grid-flow-col border-4 m-5 p-5'>
+                            <div className='grid grid-rows-3 grid-flow-col border-4 m-5 p-5 font-serif'>
                                 <div className='flex flex-col p-1'>
                                     <label className='text-center'>Дата та час отримання залучення</label>
                                     <div className='text-center'>
@@ -168,13 +209,13 @@ export default function Involvement () {
                                 <div className='flex flex-col p-1'>
                                     <label className='text-center'>Статус виконання робіт</label>
                                     <select>
-                                        <option className='' value='done'>
+                                        <option value='done'>
                                             Виконано
                                         </option>
-                                        <option className='' value='is_performed'>
+                                        <option value='is_performed'>
                                             Виконується
                                         </option>
-                                        <option className='' value='execution_suspended'>
+                                        <option value='execution_suspended'>
                                             Призупинено виконання
                                         </option>
                                     </select>
@@ -200,7 +241,7 @@ export default function Involvement () {
                                 </div>
                             </div>
                         </div>
-                        <div className='flex'>
+                        <div className='flex font-serif'>
                             <div className='grid grid-cols-3'>
                                 <div className='flex flex-col border-4 m-5 p-5'>
                                     <div id='personnel' className='flex flex-col'>
@@ -248,7 +289,7 @@ export default function Involvement () {
                                 </div>
                             </div>
                         </div>
-                        <div className='grid grid-cols-2 border-4 m-5 p-5'>
+                        <div className='grid grid-cols-2 border-4 m-5 p-5 font-serif'>
                             <div className='flex flex-col m-2'>
                                 <label className='text-center'>Використано тротилу</label>
                                 <input type='text' className='form-input'/>
@@ -258,7 +299,7 @@ export default function Involvement () {
                                 <input type='text' className='form-input'/>
                             </div>
                         </div>
-                        <div className='m-5'>
+                        <div className='m-5 font-serif'>
                             <button className='bg-green-600 p-3 rounded' type='submit' >
                                 Оформити
                             </button>
