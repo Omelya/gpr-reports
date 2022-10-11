@@ -4,11 +4,49 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {useState} from "react";
 
-export async function action ({request, params}) {
+export async function action () {
     let data = document.getElementById('report'),
-        formData = new FormData(data);
+        formData = new FormData(data),
+        params = {},
+        person = [],
+        ammunition = {},
+        allAmmunitionName = formData.getAll('name_ammunition'),
+        allNumberAmmunition = formData.getAll('number_ammunition'),
+        year = new Date().getFullYear(),
+        keys = [
+            'act_type',
+            'act_number',
+            'report_type',
+            'report_number',
+            'person',
+            'name_ammunition',
+            'number_ammunition'
+        ];
 
-    await sendEngagementData();
+    for (const [key, value] of formData.entries()) {
+        if (keys.includes(key)) {
+            continue;
+        }
+
+        params[key] = value;
+    }
+
+    for (let name of formData.getAll('person')) {
+        person.push(name);
+    }
+
+    for (let i = 0; i < formData.getAll('name_ammunition').length; i++) {
+        let name = allAmmunitionName[i].replace(/\s/gi, '_');
+
+        ammunition[name] = allNumberAmmunition[i];
+    }
+
+    params['persons'] = person;
+    params['ammunitions'] = ammunition
+    params['act_code'] = [formData.get('act_type'), '-08-', year, '/',formData.get('act_number')].join('');
+    params['report_code'] = [formData.get('report_type'), '-08-', year, '/',formData.get('report_number')].join('');
+
+    await sendEngagementData(params);
 }
 
 function addPerson () {
@@ -18,6 +56,8 @@ function addPerson () {
 
     option.innerText = 'Владислав Омеляненко';
     select.className = 'm-2';
+    select.name = 'person';
+
     select.append(option);
     element.append(select);
 }
@@ -83,11 +123,11 @@ export default function Involvement () {
                     <Form method="post" id='report'>
                         <div className='flex flex-col'>
                             <div className='grid grid-cols-2 border-4 m-5 p-5'>
-                                <div className='flex flex-col p-1'>
-                                    <label className='text-center font-serif'>Номер акта</label>
+                                <div className='flex flex-col p-1 font-serif'>
+                                    <label className='text-center'>Номер акта</label>
                                     <div className='flex items-center justify-center'>
-                                        <p className='font-serif'>
-                                            <select>
+                                        <p>
+                                            <select name='act_type'>
                                                 <option>
                                                     ОР
                                                 </option>
@@ -110,7 +150,7 @@ export default function Involvement () {
                                     <label className='text-center'>Номер донесення</label>
                                     <div className='flex items-center justify-center'>
                                         <p>
-                                            <select>
+                                            <select name='report_type'>
                                                 <option>
                                                     ОР
                                                 </option>
@@ -129,8 +169,8 @@ export default function Involvement () {
                                         <input type='text' className='form-input w-1/12' name='report_number'/>
                                     </div>
                                 </div>
-                                <div className='flex flex-col p-1'>
-                                    <label className='text-center font-serif'>Дата донесення</label>
+                                <div className='flex flex-col p-1 font-serif'>
+                                    <label className='text-center'>Дата донесення</label>
                                     <div className='text-center'>
                                         <DatePicker
                                             selected={dateReport}
@@ -138,7 +178,7 @@ export default function Involvement () {
                                             timeInputLabel="Time:"
                                             showTimeInput
                                             dateFormat="MMMM d, yyyy hh:mm"
-                                            name='date_of_notification'
+                                            name='date_notification'
                                         />
                                     </div>
                                 </div>
@@ -176,7 +216,7 @@ export default function Involvement () {
                                             timeInputLabel="Time:"
                                             showTimeInput
                                             dateFormat="MMMM d, yyyy hh:mm"
-                                            name='date_of_notification'
+                                            name='date_received'
                                         />
                                     </div>
                                 </div>
@@ -189,7 +229,7 @@ export default function Involvement () {
                                             timeInputLabel="Time:"
                                             showTimeInput
                                             dateFormat="MMMM d, yyyy hh:mm"
-                                            name='date_of_notification'
+                                            name='start_date'
                                         />
                                     </div>
                                 </div>
@@ -202,13 +242,13 @@ export default function Involvement () {
                                             timeInputLabel="Time:"
                                             showTimeInput
                                             dateFormat="MMMM d, yyyy hh:mm"
-                                            name='date_of_notification'
+                                            name='end_date'
                                         />
                                     </div>
                                 </div>
                                 <div className='flex flex-col p-1'>
                                     <label className='text-center'>Статус виконання робіт</label>
-                                    <select>
+                                    <select name='work_status'>
                                         <option value='done'>
                                             Виконано
                                         </option>
@@ -223,7 +263,7 @@ export default function Involvement () {
                                 <div>
                                     <div className='flex flex-col p-1'>
                                         <label className='text-center'>Місце виконання</label>
-                                        <input type='text' className='form-input'/>
+                                        <input type='text' className='form-input' name='place_execution'/>
                                     </div>
                                 </div>
                                 <div className='flex flex-col p-1'>
@@ -231,11 +271,11 @@ export default function Involvement () {
                                     <div className='flex justify-center ml-5'>
                                         <div className='flex items-center ml-5'>
                                             <label className='pr-4'>N</label>
-                                            <input type='text' className='form-input'/>
+                                            <input type='text' className='form-input' name='coordinates_north'/>
                                         </div>
                                         <div className='flex items-center ml-5'>
                                             <label className='pr-4'>E</label>
-                                            <input type='text' className='form-input'/>
+                                            <input type='text' className='form-input' name='coordinates_east'/>
                                         </div>
                                     </div>
                                 </div>
@@ -246,7 +286,7 @@ export default function Involvement () {
                                 <div className='flex flex-col border-4 m-5 p-5'>
                                     <div id='personnel' className='flex flex-col'>
                                         <p>Залучений особовий склад</p>
-                                        <select className='m-2'>
+                                        <select className='m-2' name='person'>
                                             <option>Сергій Бондарюк</option>
                                             <option>Михайло Ігнатко</option>
                                         </select>
@@ -259,7 +299,7 @@ export default function Involvement () {
                                 </div>
                                 <div className='flex flex-col border-4 m-5 p-4'>
                                     <label className='text-center'>Обстежено території, га</label>
-                                    <input type='text' className='form-input m-2'/>
+                                    <input type='text' className='form-input m-2' name='examined'/>
                                 </div>
                                 <div className='flex flex-col border-4 m-5 p-4'>
                                     <p className='text-center'>Виявлені ВНП</p>
@@ -284,7 +324,12 @@ export default function Involvement () {
                                     </div>
                                     <div className='flex flex-col'>
                                         <label className='text-center'>Всього ВНП</label>
-                                        <input disabled type='text' className='form-input' id='all_ammunition'/>
+                                        <input
+                                            name='all_ammunition'
+                                            type='text'
+                                            className='form-input'
+                                            id='all_ammunition'
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -292,11 +337,11 @@ export default function Involvement () {
                         <div className='grid grid-cols-2 border-4 m-5 p-5 font-serif'>
                             <div className='flex flex-col m-2'>
                                 <label className='text-center'>Використано тротилу</label>
-                                <input type='text' className='form-input'/>
+                                <input type='text' className='form-input' name='tnt'/>
                             </div>
                             <div className='flex flex-col m-2'>
                                 <label className='text-center'>Використано детонаторів</label>
-                                <input type='text' className='form-input'/>
+                                <input type='text' className='form-input' name='detonator'/>
                             </div>
                         </div>
                         <div className='m-5 font-serif'>

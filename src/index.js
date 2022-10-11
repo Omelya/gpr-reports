@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import Main from "./container/Main";
-import Involvement, {action as sendAction} from "./container/content/Involvement";
+import Involvement, {action as sendReportAction} from "./container/content/Involvement";
 import Report from "./container/content/Report";
 import Overview from "./container/content/Overview";
 import reportWebVitals from './reportWebVitals';
@@ -23,7 +23,7 @@ const router = createBrowserRouter([
             {
                 path: "/involvement",
                 element: <Involvement/>,
-                action: sendAction
+                action: sendReportAction
             },
             {
                 path: "/report",
