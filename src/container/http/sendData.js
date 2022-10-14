@@ -2,7 +2,7 @@ import axios from "axios";
 
 export function sendEngagementData (params) {
     let data = {
-        data: JSON.stringify({
+        data:{
             type: 'report',
             attributes: {
                 act_code: params['act_code'],
@@ -20,14 +20,14 @@ export function sendEngagementData (params) {
                 },
                 examined: params['examined'],
                 persons: params['persons'],
-                ammunitions: params['ammunitions'],
-                all_ammunitions: params['all_ammunition'],
+                ammunition: params['ammunition'],
+                all_ammunition: params['all_ammunition'],
                 tnt: params['tnt'],
                 detonator: params['detonator']
             }
-        })
+        }
     };
-    console.log(data)
+
     axios({
         method: 'post',
         headers: {

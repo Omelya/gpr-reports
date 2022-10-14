@@ -41,12 +41,52 @@ export async function action () {
         ammunition[name] = allNumberAmmunition[i];
     }
 
+    params['date_notification'] = convertDate(params['date_notification'])
+    params['date_received'] = convertDate(params['date_received']);
+    params['start_date'] = convertDate(params['start_date']);
+    params['end_date'] = convertDate(params['end_date']);
     params['persons'] = person;
-    params['ammunitions'] = ammunition
+    params['ammunition'] = ammunition
     params['act_code'] = [formData.get('act_type'), '-08-', year, '/',formData.get('act_number')].join('');
     params['report_code'] = [formData.get('report_type'), '-08-', year, '/',formData.get('report_number')].join('');
 
     await sendEngagementData(params);
+}
+
+function convertDate(date) {
+    let dateObject = new Date(date),
+        day = '' + dateObject.getDate(),
+        month = '' + (dateObject.getMonth() + 1),
+        year = dateObject.getFullYear(),
+        split = date.split(' ');
+
+    if (month.length < 2) {
+        month = '0' + month;
+    }
+
+    if (day.length < 2) {
+        day = '0' + day;
+    }
+
+    if (split.length > 3) {
+        let hour = String(dateObject.getHours()),
+            minutes = String(dateObject.getMinutes());
+
+        if (hour.length < 2) {
+            hour = '0' + hour;
+        }
+
+        if (minutes.length < 2) {
+            minutes = '0' + minutes;
+        }
+
+        let time = [hour, minutes].join(':'),
+            date = [year, month, day].join('-');
+
+        return date + ' ' + time;
+    }
+
+    return [year, month, day].join('-');
 }
 
 function addPerson () {
@@ -175,9 +215,7 @@ export default function Involvement () {
                                         <DatePicker
                                             selected={dateReport}
                                             onChange={(date) => setDateReport(date)}
-                                            timeInputLabel="Time:"
-                                            showTimeInput
-                                            dateFormat="MMMM d, yyyy hh:mm"
+                                            dateFormat="MMMM d, yyyy"
                                             name='date_notification'
                                         />
                                     </div>
