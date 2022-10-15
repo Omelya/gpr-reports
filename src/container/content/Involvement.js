@@ -3,6 +3,7 @@ import { sendEngagementData } from "../http/sendData";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {useState} from "react";
+import closeIcons from "../../img/icons/icons.svg"
 
 export async function action () {
     let data = document.getElementById('report'),
@@ -107,19 +108,24 @@ function addFields () {
         div = document.createElement('div'),
         select = document.createElement('select'),
         option = document.createElement('option'),
-        input = document.createElement('input');
+        input = document.createElement('input'),
+        closeButton = document.createElement('button'),
+        img = document.createElement('img');
 
-    div.className = 'grid grid-cols-2';
-    select.className = 'm-2';
+    div.className = 'grid grid-cols-7 items-center';
+    select.className = 'm-2 col-span-4';
     select.name = 'name_ammunition';
     option.innerText = 'Граната Ф-1';
-    input.className = 'form-input m-2 number'
+    input.className = 'form-input m-2 number col-span-2'
     input.type = 'text';
     input.name = 'number_ammunition';
+    closeButton.className = 'bg-gray-200 rounded-md h-8 w-8 col-start-7';
+    img.src = closeIcons + '#close';
     input.addEventListener('change', numberAmmunition, false);
 
+    closeButton.append(img);
     select.append(option);
-    div.append(select, input);
+    div.append(select, input, closeButton);
     element.append(div);
 }
 
@@ -319,56 +325,54 @@ export default function Involvement () {
                                 </div>
                             </div>
                         </div>
-                        <div className='flex font-serif'>
-                            <div className='grid grid-cols-3'>
-                                <div className='flex flex-col border-4 m-5 p-5'>
-                                    <div id='personnel' className='flex flex-col'>
-                                        <p>Залучений особовий склад</p>
-                                        <select className='m-2' name='person'>
-                                            <option>Сергій Бондарюк</option>
-                                            <option>Михайло Ігнатко</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <button onClick={() => addPerson()}>
-                                            Добавити сапера
-                                        </button>
-                                    </div>
+                        <div className='grid grid-cols-3 font-serif'>
+                            <div className='flex flex-col border-4 m-5 p-5'>
+                                <div id='personnel' className='flex flex-col'>
+                                    <p>Залучений особовий склад</p>
+                                    <select className='m-2' name='person'>
+                                        <option>Сергій Бондарюк</option>
+                                        <option>Михайло Ігнатко</option>
+                                    </select>
                                 </div>
-                                <div className='flex flex-col border-4 m-5 p-4'>
-                                    <label className='text-center'>Обстежено території, га</label>
-                                    <input type='text' className='form-input m-2' name='examined'/>
+                                <div>
+                                    <button onClick={() => addPerson()}>
+                                        Добавити сапера
+                                    </button>
                                 </div>
-                                <div className='flex flex-col border-4 m-5 p-4'>
-                                    <p className='text-center'>Виявлені ВНП</p>
-                                    <div className='flex flex-col' id='ammunition'>
-                                        <div className='grid grid-cols-2'>
-                                            <select className='m-2' name='name_ammunition'>
-                                                <option>Протитанкова міна ТМ-56</option>
-                                                <option>Протитанкова міна ТМ-72</option>
-                                            </select>
-                                            <input
-                                                type='text'
-                                                className='form-input m-2 number'
-                                                name='number_ammunition'
-                                                onChange={() => numberAmmunition()}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <button onClick={() => addFields()}>
-                                            Добавити поле
-                                        </button>
-                                    </div>
-                                    <div className='flex flex-col'>
-                                        <label className='text-center'>Всього ВНП</label>
-                                        <input
-                                            name='all_ammunition'
-                                            type='text'
-                                            className='form-input'
-                                            id='all_ammunition'
-                                        />
-                                    </div>
+                            </div>
+                            <div className='flex flex-col border-4 m-5 p-4'>
+                                <label className='text-center'>Обстежено території, га</label>
+                                <input type='text' className='form-input m-2' name='examined'/>
+                            </div>
+                            <div className='flex flex-col border-4 m-5 p-4'>
+                                <p className='text-center'>Виявлені ВНП</p>
+                                <div className='flex' id='ammunition'>
+                                    {/*<div className='grid grid-cols-2'>*/}
+                                    {/*    <select className='m-2' name='name_ammunition'>*/}
+                                    {/*        <option>Протитанкова міна ТМ-56</option>*/}
+                                    {/*        <option>Протитанкова міна ТМ-72</option>*/}
+                                    {/*    </select>*/}
+                                    {/*    <input*/}
+                                    {/*        type='text'*/}
+                                    {/*        className='form-input m-2 number'*/}
+                                    {/*        name='number_ammunition'*/}
+                                    {/*        onChange={() => numberAmmunition()}*/}
+                                    {/*    />*/}
+                                    {/*</div>*/}
+                                </div>
+                                <div>
+                                    <button onClick={() => addFields()}>
+                                        Добавити поле
+                                    </button>
+                                </div>
+                                <div className='flex flex-col'>
+                                    <label className='text-center'>Всього ВНП</label>
+                                    <input
+                                        name='all_ammunition'
+                                        type='text'
+                                        className='form-input'
+                                        id='all_ammunition'
+                                    />
                                 </div>
                             </div>
                         </div>

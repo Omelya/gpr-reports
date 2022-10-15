@@ -6,7 +6,7 @@ import logo from '../logo.svg.png';
 
 function Header() {
     return (
-        <div className='container mx-auto bg-gray-400 rounded'>
+        <div className='bg-gray-400 rounded'>
             <div className='flex justify-start'>
                 <div className='p-2'>
                     <Link to='/'>

@@ -5,9 +5,9 @@ import './index.css';
 
 function App() {
   return (
-      <div className='flex flex-col h-screen'>
+      <div className='flex flex-col'>
           <Header/>
-          <div className='container mx-auto flex-grow'>
+          <div className='flex-grow'>
               <Outlet/>
           </div>
           <Footer/>
