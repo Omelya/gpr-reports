@@ -2,7 +2,7 @@ import { Form } from "react-router-dom";
 import { sendEngagementData } from "../http/sendData";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import {useState} from "react";
+import { useState } from "react";
 import closeIcons from "../../img/icons/icons.svg"
 
 export async function action () {
@@ -120,6 +120,7 @@ function addFields () {
     input.type = 'text';
     input.name = 'number_ammunition';
     closeButton.className = 'bg-gray-200 rounded-md h-8 w-8 col-start-7';
+    closeButton.type = 'button';
     img.src = closeIcons + '#close';
     input.addEventListener('change', numberAmmunition, false);
 
@@ -335,7 +336,7 @@ export default function Involvement () {
                                     </select>
                                 </div>
                                 <div>
-                                    <button onClick={() => addPerson()}>
+                                    <button type='button' onClick={() => addPerson()}>
                                         Добавити сапера
                                     </button>
                                 </div>
@@ -346,22 +347,11 @@ export default function Involvement () {
                             </div>
                             <div className='flex flex-col border-4 m-5 p-4'>
                                 <p className='text-center'>Виявлені ВНП</p>
-                                <div className='flex' id='ammunition'>
-                                    {/*<div className='grid grid-cols-2'>*/}
-                                    {/*    <select className='m-2' name='name_ammunition'>*/}
-                                    {/*        <option>Протитанкова міна ТМ-56</option>*/}
-                                    {/*        <option>Протитанкова міна ТМ-72</option>*/}
-                                    {/*    </select>*/}
-                                    {/*    <input*/}
-                                    {/*        type='text'*/}
-                                    {/*        className='form-input m-2 number'*/}
-                                    {/*        name='number_ammunition'*/}
-                                    {/*        onChange={() => numberAmmunition()}*/}
-                                    {/*    />*/}
-                                    {/*</div>*/}
+                                <div className='flex flex-col' id='ammunition'>
+
                                 </div>
                                 <div>
-                                    <button onClick={() => addFields()}>
+                                    <button type='button' onClick={() => addFields()}>
                                         Добавити поле
                                     </button>
                                 </div>

@@ -4,7 +4,7 @@ import App from './App';
 import Main from "./container/Main";
 import Involvement, {action as sendReportAction} from "./container/content/Involvement";
 import Report from "./container/content/Report";
-import Overview from "./container/content/Overview";
+import Overview, {loader as involvementLoader} from "./container/content/Overview";
 import reportWebVitals from './reportWebVitals';
 import {
     createBrowserRouter,
@@ -32,6 +32,7 @@ const router = createBrowserRouter([
             {
                 path: "/overview",
                 element: <Overview/>,
+                loader: involvementLoader
             },
         ]
     },

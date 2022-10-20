@@ -1,4 +1,16 @@
+import { getInvolvementData } from "../http/getData";
+import { useLoaderData } from "react-router-dom";
+
+export async function loader() {
+    const involvements = await getInvolvementData();
+    return { involvements };
+}
+
 function Overview () {
+    const { involvements } = useLoaderData();
+
+    let ammunition;
+
     return (
         <>
             <div className='text-center my-2 font-bold'>
@@ -33,29 +45,47 @@ function Overview () {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr className='text-center border-2'>
-                        <td className='border-2'>
-                            Номер акту
-                        </td>
-                        <td className='border-2'>
-                            Номер донесення
-                        </td>
-                        <td className='border-2'>
-                            Дата виконання
-                        </td>
-                        <td className='border-2'>
-                            Тип завдання
-                        </td>
-                        <td className='border-2'>
-                            Місце виконання
-                        </td>
-                        <td className='border-2'>
-                            Обстежено
-                        </td>
-                        <td className='border-2'>
-                            Знайдено ВНП
-                        </td>
-                    </tr>
+                {
+                    involvements.data.data.attributes.map((involvement) => (
+                        <tr key={involvement.id} className='text-center border-2'>
+                            <td className='border-2'>
+                                {involvement.act_code}
+                            </td>
+                            <td className='border-2'>
+                                {involvement.report_code}
+                            </td>
+                            <td className='border-2'>
+                                {involvement.date_notification}
+                            </td>
+                            <td className='border-2'>
+                                {involvement.task_type}
+                            </td>
+                            <td className='border-2'>
+                                {involvement.place_execution}
+                            </td>
+                            <td className='border-2'>
+                                {involvement.examined}
+                            </td>
+                            <td className='border-2'>
+                                {
+                                    involvement.ammunition
+                                }
+                            </td>
+                            <td className=' grid grid-column-1'>
+                                <button id={involvement.id}
+                                        className='border-2 bg-gray-200 hover:bg-gray-300 rounded-lg m-2'
+                                >
+                                    Редагувати
+                                </button>
+                                <button id={involvement.id}
+                                        className='border-2 bg-gray-200 hover:bg-gray-300 rounded-lg m-2'
+                                >
+                                    Видалити
+                                </button>
+                            </td>
+                        </tr>
+                    ))
+                }
                 </tbody>
             </table>
         </>
