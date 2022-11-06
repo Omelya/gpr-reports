@@ -9,7 +9,7 @@ export default function InvolvementNumberInput (props) {
             <label className='text-center'>{name}</label>
             <div className='flex items-center justify-center'>
                 <p>
-                    <select name='act_type'>
+                    <select name={props.type}>
                         <option>
                             ОР
                         </option>

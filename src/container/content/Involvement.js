@@ -137,9 +137,11 @@ export default function Involvement () {
                             <div className='grid grid-cols-2 border-4 m-5 p-5'>
                                 <InvolvementNumberInput
                                     name='act_number'
+                                    type='act_type'
                                 />
                                 <InvolvementNumberInput
                                     name='report_number'
+                                    type='report_type'
                                 />
                                 <div className='flex flex-col p-1 font-serif'>
                                     <label className='text-center'>Дата донесення</label>

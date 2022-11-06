@@ -5,6 +5,10 @@ function getPlaceExecution (event) {
         placeExecution = [],
         datalist = document.getElementById('place_execution');
 
+    if (datalist.children.length > 0) {
+        datalist.delete()
+    }
+
     if (value.length > 2) {
         placeExecution = populatedAreas.filter(e => e.object_name.search(value.toUpperCase()) !== -1);
 
