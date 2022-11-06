@@ -30,6 +30,7 @@ function addFields () {
     input.name = 'number_ammunition';
     closeButton.className = 'bg-gray-200 rounded-md h-8 w-8 col-start-7';
     closeButton.type = 'button';
+    closeButton.addEventListener('click', deleteFields, false);
     img.src = closeIcons + '#close';
     input.addEventListener('change', numberAmmunition, false);
 
@@ -37,6 +38,12 @@ function addFields () {
     select.append(option);
     div.append(select, input, closeButton);
     element.append(div);
+}
+
+function deleteFields (e) {
+    e.currentTarget.closest('.grid.grid-cols-7.items-center').remove()
+
+    numberAmmunition()
 }
 
 export default function AmmunitionInput () {
