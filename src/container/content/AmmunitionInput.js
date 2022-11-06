@@ -28,11 +28,11 @@ function addFields () {
     input.className = 'form-input m-2 number col-span-2'
     input.type = 'text';
     input.name = 'number_ammunition';
+    input.addEventListener('keyup', checkValue, false);
     closeButton.className = 'bg-gray-200 rounded-md h-8 w-8 col-start-7';
     closeButton.type = 'button';
     closeButton.addEventListener('click', deleteFields, false);
     img.src = closeIcons + '#close';
-    input.addEventListener('change', numberAmmunition, false);
 
     closeButton.append(img);
     select.append(option);
@@ -42,7 +42,11 @@ function addFields () {
 
 function deleteFields (e) {
     e.currentTarget.closest('.grid.grid-cols-7.items-center').remove()
+    numberAmmunition()
+}
 
+function checkValue (e) {
+    e.currentTarget.value = e.target.value.replace( /[^0123456789]/, '' );;
     numberAmmunition()
 }
 
