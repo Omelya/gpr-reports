@@ -1,4 +1,5 @@
 import closeIcons from "../../img/icons/icons.svg";
+import checkNumberValue from "../validation/checkNumberValue";
 
 function numberAmmunition () {
     let input = document.getElementById('all_ammunition'),
@@ -46,7 +47,7 @@ function deleteFields (e) {
 }
 
 function checkValue (e) {
-    e.currentTarget.value = e.target.value.replace( /[^0123456789]/, '' );;
+    checkNumberValue(e)
     numberAmmunition()
 }
 

@@ -6,6 +6,9 @@ import { useState } from "react";
 import PlaceExecutionInput from "./PlaceExecutionInput";
 import AmmunitionInput from "./AmmunitionInput";
 import InvolvementNumberInput from "./InvolvementNumberInput";
+import checkNumberValue from "../validation/checkNumberValue";
+import checkFloatNumberValue from "../validation/checkFloatNumberValue";
+import checkCoordinates from "../validation/checkCoordinates";
 
 export async function action () {
     let data = document.getElementById('report'),
@@ -233,11 +236,21 @@ export default function Involvement () {
                                     <div className='flex justify-center ml-5'>
                                         <div className='flex items-center ml-5'>
                                             <label className='pr-4'>N</label>
-                                            <input type='text' className='form-input' name='coordinates_north'/>
+                                            <input
+                                                type='text'
+                                                className='form-input'
+                                                name='coordinates_north'
+                                                onChange={e => checkCoordinates(e)}
+                                            />
                                         </div>
                                         <div className='flex items-center ml-5'>
                                             <label className='pr-4'>E</label>
-                                            <input type='text' className='form-input' name='coordinates_east'/>
+                                            <input
+                                                type='text'
+                                                className='form-input'
+                                                name='coordinates_east'
+                                                onChange={e => checkCoordinates(e)}
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -260,18 +273,33 @@ export default function Involvement () {
                             </div>
                             <div className='flex flex-col border-4 m-5 p-4'>
                                 <label className='text-center'>Обстежено території, га</label>
-                                <input type='text' className='form-input m-2' name='examined'/>
+                                <input
+                                    type='text'
+                                    className='form-input m-2'
+                                    name='examined'
+                                    onChange={e => checkFloatNumberValue(e)}
+                                />
                             </div>
                             <AmmunitionInput/>
                         </div>
                         <div className='grid grid-cols-2 border-4 m-5 p-5 font-serif'>
                             <div className='flex flex-col m-2'>
                                 <label className='text-center'>Використано тротилу</label>
-                                <input type='text' className='form-input' name='tnt'/>
+                                <input
+                                    type='text'
+                                    className='form-input'
+                                    name='tnt'
+                                    onChange={e => checkFloatNumberValue(e)}
+                                />
                             </div>
                             <div className='flex flex-col m-2'>
                                 <label className='text-center'>Використано детонаторів</label>
-                                <input type='text' className='form-input' name='detonator'/>
+                                <input
+                                    type='text'
+                                    className='form-input'
+                                    name='detonator'
+                                    onChange={e => checkNumberValue(e)}
+                                />
                             </div>
                         </div>
                         <div className='m-5 font-serif'>

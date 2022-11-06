@@ -1,3 +1,5 @@
+import checkNumberValue from "../validation/checkNumberValue";
+
 export default function InvolvementNumberInput (props) {
     const year = new Date().getFullYear();
     const name = props.name === 'act_number' ? 'Номер акта' : 'Номер донесення';
@@ -27,6 +29,7 @@ export default function InvolvementNumberInput (props) {
                     type='text'
                     className='form-input w-1/12'
                     name={props.name}
+                    onChange={e => checkNumberValue(e)}
                 />
             </div>
         </div>
