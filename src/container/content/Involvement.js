@@ -5,6 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useState } from "react";
 import PlaceExecutionInput from "./PlaceExecutionInput";
 import AmmunitionInput from "./AmmunitionInput";
+import InvolvementNumberInput from "./InvolvementNumberInput";
 
 export async function action () {
     let data = document.getElementById('report'),
@@ -120,7 +121,6 @@ export default function Involvement () {
     const [endDate, setEndDate] = useState(
         new Date()
     );
-    let year = new Date().getFullYear();
 
     return (
         <>
@@ -132,52 +132,12 @@ export default function Involvement () {
                     <Form method="post" id='report'>
                         <div className='flex flex-col'>
                             <div className='grid grid-cols-2 border-4 m-5 p-5'>
-                                <div className='flex flex-col p-1 font-serif'>
-                                    <label className='text-center'>Номер акта</label>
-                                    <div className='flex items-center justify-center'>
-                                        <p>
-                                            <select name='act_type'>
-                                                <option>
-                                                    ОР
-                                                </option>
-                                                <option>
-                                                    ГР
-                                                </option>
-                                                <option>
-                                                    ТО
-                                                </option>
-                                                <option>
-                                                    НР
-                                                </option>
-                                            </select>
-                                            -08-{year}/
-                                        </p>
-                                        <input type='text' className='form-input w-1/12' name='act_number'/>
-                                    </div>
-                                </div>
-                                <div className='flex flex-col p-1 font-serif'>
-                                    <label className='text-center'>Номер донесення</label>
-                                    <div className='flex items-center justify-center'>
-                                        <p>
-                                            <select name='report_type'>
-                                                <option>
-                                                    ОР
-                                                </option>
-                                                <option>
-                                                    ГР
-                                                </option>
-                                                <option>
-                                                    ТО
-                                                </option>
-                                                <option>
-                                                    НР
-                                                </option>
-                                            </select>
-                                            -08-{year}/
-                                        </p>
-                                        <input type='text' className='form-input w-1/12' name='report_number'/>
-                                    </div>
-                                </div>
+                                <InvolvementNumberInput
+                                    name='act_number'
+                                />
+                                <InvolvementNumberInput
+                                    name='report_number'
+                                />
                                 <div className='flex flex-col p-1 font-serif'>
                                     <label className='text-center'>Дата донесення</label>
                                     <div className='text-center'>
