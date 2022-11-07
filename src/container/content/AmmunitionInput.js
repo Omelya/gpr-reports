@@ -70,6 +70,7 @@ export default function AmmunitionInput () {
                     type='text'
                     className='form-input'
                     id='all_ammunition'
+                    onChange={e => checkNumberValue(e)}
                 />
             </div>
         </div>
