@@ -9,6 +9,7 @@ import InvolvementNumberInput from "./InvolvementNumberInput";
 import checkNumberValue from "../validation/checkNumberValue";
 import checkFloatNumberValue from "../validation/checkFloatNumberValue";
 import checkCoordinates from "../validation/checkCoordinates";
+import checkFormData from "../validation/checkFormData";
 
 export async function action () {
     let data = document.getElementById('report'),
@@ -28,6 +29,8 @@ export async function action () {
             'name_ammunition',
             'number_ammunition'
         ];
+
+        let error = checkFormData(formData)
 
     for (const [key, value] of formData.entries()) {
         if (keys.includes(key)) {
@@ -56,7 +59,13 @@ export async function action () {
     params['act_code'] = [formData.get('act_type'), '-08-', year, '/',formData.get('act_number')].join('');
     params['report_code'] = [formData.get('report_type'), '-08-', year, '/',formData.get('report_number')].join('');
 
-    await sendEngagementData(params);
+    if (!error) {
+        document.getElementById('error').classList.add('hidden');
+
+        await sendEngagementData(params);
+    } else {
+        document.getElementById('error').classList.remove('hidden');
+    }
 }
 
 function convertDate(date) {
@@ -134,6 +143,9 @@ export default function Involvement () {
                 <div>
                     <Form method="post" id='report'>
                         <div className='flex flex-col'>
+                            <div id='error' className='border-2 border-red-700 bg-red-200 hidden'>
+                                <p className='p-2'>There are empty fields</p>
+                            </div>
                             <div className='grid grid-cols-2 border-4 m-5 p-5'>
                                 <InvolvementNumberInput
                                     name='act_number'

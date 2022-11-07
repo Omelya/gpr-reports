@@ -5,6 +5,9 @@ function getPlaceExecution (event) {
         placeExecution = [],
         datalist = document.getElementById('place_execution');
 
+    event.currentTarget.classList.remove('border-red-700');
+    event.currentTarget.classList.remove('border-2');
+
     if (datalist.children.length > 0) {
         datalist.delete()
     }
