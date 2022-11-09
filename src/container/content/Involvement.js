@@ -10,6 +10,7 @@ import checkNumberValue from "../validation/checkNumberValue";
 import checkFloatNumberValue from "../validation/checkFloatNumberValue";
 import checkCoordinates from "../validation/checkCoordinates";
 import checkFormData from "../validation/checkFormData";
+import PersonalSelect from "./PersonalSelect";
 
 export async function action () {
     let data = document.getElementById('report'),
@@ -102,19 +103,6 @@ function convertDate(date) {
     }
 
     return [year, month, day].join('-');
-}
-
-function addPerson () {
-    let element = document.getElementById('personnel'),
-        select = document.createElement('select'),
-        option = document.createElement('option');
-
-    option.innerText = 'Владислав Омеляненко';
-    select.className = 'm-2';
-    select.name = 'person';
-
-    select.append(option);
-    element.append(select);
 }
 
 export default function Involvement () {
@@ -271,20 +259,7 @@ export default function Involvement () {
                             </div>
                         </div>
                         <div className='grid grid-cols-3 font-serif'>
-                            <div className='flex flex-col border-4 m-5 p-5'>
-                                <div id='personnel' className='flex flex-col'>
-                                    <p>Залучений особовий склад</p>
-                                    <select className='m-2' name='person'>
-                                        <option>Сергій Бондарюк</option>
-                                        <option>Михайло Ігнатко</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <button type='button' onClick={() => addPerson()}>
-                                        Добавити сапера
-                                    </button>
-                                </div>
-                            </div>
+                            <PersonalSelect/>
                             <div className='flex flex-col border-4 m-5 p-4'>
                                 <label className='text-center'>Обстежено території, га</label>
                                 <input

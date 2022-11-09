@@ -1,0 +1,170 @@
+[
+  {
+    "first_name": "Сергій",
+    "second_name": "Шалаєнко",
+    "rank": "полковник служби ЦЗ",
+    "job": "Начальник групи піротехнічних робіт",
+    "birthday": "null",
+    "admission": true
+  },
+  {
+    "first_name": "Андрій",
+    "second_name": "Єдинак",
+    "rank": "підполковник служби ЦЗ",
+    "job": "Заступник начальника групи піротехнічних робіт",
+    "birthday": "null",
+    "admission": true
+  },
+  {
+    "first_name": "Михайло",
+    "second_name": "Варга",
+    "rank": "майор служби ЦЗ",
+    "job": "Начальник відділенн групи піротехнічних робіт",
+    "birthday": "null",
+    "admission": true
+  },
+  {
+    "first_name": "Владислав",
+    "second_name": "Омеляненко",
+    "rank": "старший лейтенант служби ЦЗ",
+    "job": "Начальник відділення групи піротехнічних робіт",
+    "birthday": "null",
+    "admission": true
+  },
+  {
+    "first_name": "Степан",
+    "second_name": "Мовнар",
+    "rank": "прапорщик служби ЦЗ",
+    "job": "Начальник відділення групи піротехнічних робіт",
+    "birthday": "null",
+    "admission": true
+  },
+  {
+    "first_name": "Микита",
+    "second_name": "Гуцол",
+    "rank": "прапорщик служби ЦЗ",
+    "job": "Старший сапер групи піротехнічних робіт",
+    "birthday": "null",
+    "admission": true
+  },
+  {
+    "first_name": "Максим",
+    "second_name": "Мельничук",
+    "rank": "старший сержант служби ЦЗ",
+    "job": "Старший сапер групи піротехнічних робіт",
+    "birthday": "null",
+    "admission": true
+  },
+  {
+    "first_name": "Максим",
+    "second_name": "Ротний",
+    "rank": "сержант служби ЦЗ",
+    "job": "Старший сапер групи піротехнічних робіт",
+    "birthday": "null",
+    "admission": true
+  },
+  {
+    "first_name": "Євген",
+    "second_name": "Янчик",
+    "rank": "молодший сержант служби ЦЗ",
+    "job": "Старший сапер групи піротехнічних робіт",
+    "birthday": "null",
+    "admission": true
+  },
+  {
+    "first_name": "Юрій",
+    "second_name": "Мовнар",
+    "rank": "прапорщик служби ЦЗ",
+    "job": "Сапер групи піротехнічних робіт",
+    "birthday": "null",
+    "admission": true
+  },
+  {
+    "first_name": "Микола",
+    "second_name": "Синяк",
+    "rank": "старшина служби ЦЗ",
+    "job": "Сапер групи піротехнічних робіт",
+    "birthday": "null",
+    "admission": true
+  },
+  {
+    "first_name": "Василь",
+    "second_name": "Галайка",
+    "rank": "сержант служби ЦЗ",
+    "job": "Сапер групи піротехнічних робіт",
+    "birthday": "null",
+    "admission": true
+  },
+  {
+    "first_name": "Денис",
+    "second_name": "Крайниковець",
+    "rank": "рядовий служби ЦЗ",
+    "job": "Сапер групи піротехнічних робіт",
+    "birthday": "null",
+    "admission": true
+  },
+  {
+    "first_name": "Сергій",
+    "second_name": "Бондарюк",
+    "rank": "страший прапорщик служби ЦЗ",
+    "job": "Старший водій-сапер групи піротехнічних робіт",
+    "birthday": "null",
+    "admission": true
+  },
+  {
+    "first_name": "Андрій",
+    "second_name": "Гацош",
+    "rank": "сержант служби ЦЗ",
+    "job": "Старший водій-сапер групи піротехнічних робіт",
+    "birthday": "null",
+    "admission": true
+  },
+  {
+    "first_name": "Марк",
+    "second_name": "Осадчук",
+    "rank": "прапорщик служби ЦЗ",
+    "job": "Водій-сапер групи піротехнічних робіт",
+    "birthday": "null",
+    "admission": true
+  },
+  {
+    "first_name": "Михайло",
+    "second_name": "Ігнатко",
+    "rank": "сержант служби ЦЗ",
+    "job": "Водій-сапер групи піротехнічних робіт",
+    "birthday": "null",
+    "admission": true
+  },
+  {
+    "first_name": "Дмитро",
+    "second_name": "Митро",
+    "rank": "рядовий служби ЦЗ",
+    "job": "Водій-сапер групи піротехнічних робіт",
+    "birthday": "null",
+    "admission": true
+  },
+  {
+    "first_name": "Евген",
+    "second_name": "Фалайло",
+    "rank": "рядовий служби ЦЗ",
+    "job": "Водій-сапер групи піротехнічних робіт",
+    "birthday": "null",
+    "admission": true
+  },
+  {
+    "first_name": "Віктор",
+    "second_name": "Бартованець",
+    "rank": "рядовий служби ЦЗ",
+    "job": "Водій-сапер групи піротехнічних робіт",
+    "birthday": "null",
+    "admission": true
+  },
+  {
+    "first_name": "Мар'ян",
+    "second_name": "Лазарь",
+    "rank": "рядовий служби ЦЗ",
+    "job": "Водій-сапер групи піротехнічних робіт",
+    "birthday": "null",
+    "admission": true
+  }
+]
