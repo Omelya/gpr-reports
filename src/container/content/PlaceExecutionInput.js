@@ -8,11 +8,11 @@ function getPlaceExecution (event) {
     event.currentTarget.classList.remove('border-red-700');
     event.currentTarget.classList.remove('border-2');
 
-    if (datalist.children.length > 0) {
-        datalist.delete()
-    }
-
     if (value.length > 2) {
+        while (datalist.firstChild) {
+            datalist.removeChild(datalist.firstChild);
+        }
+
         placeExecution = populatedAreas.filter(e => e.object_name.search(value.toUpperCase()) !== -1);
 
         placeExecution.forEach(item => {
