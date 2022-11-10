@@ -4,7 +4,7 @@ import App from './App';
 import Main from "./container/Main";
 import Involvement, {action as sendReportAction} from "./container/content/Involvement";
 import Report from "./container/content/Report";
-import Overview, {loader as involvementLoader} from "./container/content/Overview";
+import Overview, {loader as involvementsLoader} from "./container/content/Overview";
 import reportWebVitals from './reportWebVitals';
 import {
     createBrowserRouter,
@@ -26,13 +26,19 @@ const router = createBrowserRouter([
                 action: sendReportAction
             },
             {
+                path: "/involvement/edit",
+                element: <Involvement/>,
+                action: sendReportAction,
+                // loader: involvementLoader
+            },
+            {
                 path: "/report",
                 element: <Report/>,
             },
             {
                 path: "/overview",
                 element: <Overview/>,
-                loader: involvementLoader
+                loader: involvementsLoader
             },
         ]
     },

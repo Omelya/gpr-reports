@@ -1,9 +1,23 @@
 import { getInvolvementData } from "../http/getData";
 import { useLoaderData } from "react-router-dom";
+import removeData from "../http/removeData";
 
 export async function loader() {
     const involvements = await getInvolvementData();
     return { involvements };
+}
+
+function removeInvolvement(id) {
+    let element = document.getElementById(id);
+
+    removeData(id)
+        .then(response =>
+            element.remove()
+            //TODO add toast
+        )
+        .catch(
+            //TODO add toast
+        )
 }
 
 function Overview () {
@@ -47,7 +61,7 @@ function Overview () {
                 <tbody>
                 {
                     involvements.data.data.attributes.map((involvement) => (
-                        <tr key={involvement.id} className='text-center border-2'>
+                        <tr id={involvement.id} key={involvement.id} className='text-center border-2'>
                             <td className='border-2'>
                                 {involvement.act_code}
                             </td>
@@ -72,13 +86,16 @@ function Overview () {
                                 }
                             </td>
                             <td className=' grid grid-column-1'>
-                                <button id={involvement.id}
-                                        className='border-2 bg-gray-200 hover:bg-gray-300 rounded-lg m-2'
+                                <button
+                                    id={involvement.id}
+                                    className='border-2 bg-gray-200 hover:bg-gray-300 rounded-lg m-2'
                                 >
                                     Редагувати
                                 </button>
-                                <button id={involvement.id}
-                                        className='border-2 bg-gray-200 hover:bg-gray-300 rounded-lg m-2'
+                                <button
+                                    id={involvement.id}
+                                    className='border-2 bg-gray-200 hover:bg-gray-300 rounded-lg m-2'
+                                    onClick={e => removeInvolvement(involvement.id)}
                                 >
                                     Видалити
                                 </button>
