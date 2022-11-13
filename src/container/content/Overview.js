@@ -1,9 +1,9 @@
-import { getInvolvementData } from "../http/getData";
-import { useLoaderData } from "react-router-dom";
+import { getAllInvolvementData } from "../http/getData";
+import {useLoaderData, Form, redirect} from "react-router-dom";
 import removeData from "../http/removeData";
 
 export async function loader() {
-    const involvements = await getInvolvementData();
+    const involvements = await getAllInvolvementData();
     return { involvements };
 }
 
@@ -18,12 +18,34 @@ function removeInvolvement(id) {
         .catch(
             //TODO add toast
         )
+
+}
+
+export async function action({request}) {
+    const formData = await request.formData();
+    const id = formData.get('id');
+
+    return redirect(`/involvement/${id}/edit`);
+}
+
+function Ammunition(props) {
+    let name = Object.keys(JSON.parse(props.ammunition)),
+        value = Object.values(JSON.parse(props.ammunition)),
+        list = [];
+
+        for (let n = 0; n < name.length; n++) {
+            list.push([name[0], value[0]])
+        }
+
+    return(
+        list.map((item, keys) =>
+            <p key={keys}>{item[0]}:{item[1]}</p>
+        )
+    )
 }
 
 function Overview () {
     const { involvements } = useLoaderData();
-
-    let ammunition;
 
     return (
         <>
@@ -81,17 +103,21 @@ function Overview () {
                                 {involvement.examined}
                             </td>
                             <td className='border-2'>
-                                {
-                                    involvement.ammunition
-                                }
+                                <Ammunition
+                                    ammunition={involvement.ammunition}
+                                />
                             </td>
                             <td className=' grid grid-column-1'>
-                                <button
-                                    id={involvement.id}
-                                    className='border-2 bg-gray-200 hover:bg-gray-300 rounded-lg m-2'
-                                >
-                                    Редагувати
-                                </button>
+                                <Form method="post">
+                                    <button
+                                        type='submit'
+                                        name='id'
+                                        value={involvement.id}
+                                        className='border-2 bg-gray-200 hover:bg-gray-300 rounded-lg m-2'
+                                    >
+                                        Редагувати
+                                    </button>
+                                </Form>
                                 <button
                                     id={involvement.id}
                                     className='border-2 bg-gray-200 hover:bg-gray-300 rounded-lg m-2'

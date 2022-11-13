@@ -17,8 +17,12 @@ function addPerson () {
     element.append(select);
 }
 
-export default function PersonalSelect () {
-    let persons = [];
+export default function PersonalSelect (props) {
+    let persons = [],
+        loadPersonal = props.personal === undefined
+            ? ['']
+            : JSON.parse(props.personal);
+
     personal.forEach(item => {
         persons.push(item.first_name + ' ' + item.second_name);
     })
@@ -27,13 +31,17 @@ export default function PersonalSelect () {
         <div className='flex flex-col border-4 m-5 p-5'>
             <div id='personnel' className='flex flex-col'>
                 <p>Залучений особовий склад</p>
-                <select className="m-2" name="person">
-                    {persons.map((item, key) =>
-                        <option key={key}>
-                            {item}
-                        </option>
-                    )}
-                </select>
+                {
+                    loadPersonal.map((item, key) =>
+                        <select className="m-2" key={key} defaultValue={item} name="person">
+                            {persons.map((item, key) =>
+                                <option key={key}>
+                                    {item}
+                                </option>
+                            )}
+                        </select>
+                    )
+                }
             </div>
             <div>
                 <button type='button' onClick={() => addPerson()}>

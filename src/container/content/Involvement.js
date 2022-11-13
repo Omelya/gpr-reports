@@ -1,5 +1,6 @@
-import { Form } from "react-router-dom";
+import { Form, useLoaderData } from "react-router-dom";
 import { sendEngagementData } from "../http/sendData";
+import {getInvolvementData} from "../http/getData";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useState } from "react";
@@ -8,14 +9,14 @@ import AmmunitionInput from "./AmmunitionInput";
 import InvolvementNumberInput from "./InvolvementNumberInput";
 import checkNumberValue from "../validation/checkNumberValue";
 import checkFloatNumberValue from "../validation/checkFloatNumberValue";
-import checkCoordinates from "../validation/checkCoordinates";
 import checkFormData from "../validation/checkFormData";
 import PersonalSelect from "./PersonalSelect";
+import Coordinates from "./Coordinates";
 
-export async function action () {
+export async function action ({params}) {
     let data = document.getElementById('report'),
         formData = new FormData(data),
-        params = {},
+        involvement = {},
         person = [],
         ammunition = {},
         allAmmunitionName = formData.getAll('name_ammunition'),
@@ -38,7 +39,7 @@ export async function action () {
             continue;
         }
 
-        params[key] = value;
+        involvement[key] = value;
     }
 
     for (let name of formData.getAll('person')) {
@@ -51,22 +52,28 @@ export async function action () {
         ammunition[name] = allNumberAmmunition[i];
     }
 
-    params['date_notification'] = convertDate(params['date_notification'])
-    params['date_received'] = convertDate(params['date_received']);
-    params['start_date'] = convertDate(params['start_date']);
-    params['end_date'] = convertDate(params['end_date']);
-    params['persons'] = person;
-    params['ammunition'] = ammunition
-    params['act_code'] = [formData.get('act_type'), '-08-', year, '/',formData.get('act_number')].join('');
-    params['report_code'] = [formData.get('report_type'), '-08-', year, '/',formData.get('report_number')].join('');
+    involvement['date_notification'] = convertDate(involvement['date_notification'])
+    involvement['date_received'] = convertDate(involvement['date_received']);
+    involvement['start_date'] = convertDate(involvement['start_date']);
+    involvement['end_date'] = convertDate(involvement['end_date']);
+    involvement['persons'] = person;
+    involvement['ammunition'] = ammunition
+    involvement['act_code'] = [formData.get('act_type'), '-08-', year, '/',formData.get('act_number')].join('');
+    involvement['report_code'] = [formData.get('report_type'), '-08-', year, '/',formData.get('report_number')].join('');
 
     if (!error) {
         document.getElementById('error').classList.add('hidden');
 
-        await sendEngagementData(params);
+        await sendEngagementData(involvement, params.involvementId);
     } else {
         document.getElementById('error').classList.remove('hidden');
     }
+}
+
+export async function loader({params}) {
+    const involvement = await getInvolvementData(params.involvementId);
+
+    return {involvement}
 }
 
 function convertDate(date) {
@@ -106,6 +113,7 @@ function convertDate(date) {
 }
 
 export default function Involvement () {
+    const {involvement} = useLoaderData() ?? [];
     const [dateReport, setDateReport] = useState(
         new Date()
     );
@@ -121,6 +129,8 @@ export default function Involvement () {
     const [endDate, setEndDate] = useState(
         new Date()
     );
+
+    let item = involvement === undefined ? [] : involvement.data.data.attributes;
 
     return (
         <>
@@ -138,16 +148,22 @@ export default function Involvement () {
                                 <InvolvementNumberInput
                                     name='act_number'
                                     type='act_type'
+                                    defaultValue={item.act_code}
                                 />
                                 <InvolvementNumberInput
                                     name='report_number'
                                     type='report_type'
+                                    defaultValue={item.report_code}
                                 />
                                 <div className='flex flex-col p-1 font-serif'>
                                     <label className='text-center'>Дата донесення</label>
                                     <div className='text-center'>
                                         <DatePicker
-                                            selected={dateReport}
+                                            selected={
+                                                item.date_notification === undefined
+                                                    ? dateReport
+                                                    : new Date(item.date_notification)
+                                            }
                                             onChange={(date) => setDateReport(date)}
                                             dateFormat="MMMM d, yyyy"
                                             name='date_notification'
@@ -156,7 +172,7 @@ export default function Involvement () {
                                 </div>
                                 <div className='flex flex-col p-1 font-serif'>
                                     <label className='text-center'>Тип завдання</label>
-                                    <select name='task_type'>
+                                    <select name='task_type' defaultValue={item.task_type}>
                                         <option>
                                             оперативне реагування на виявлення ВНП
                                         </option>
@@ -183,7 +199,11 @@ export default function Involvement () {
                                     <label className='text-center'>Дата та час отримання залучення</label>
                                     <div className='text-center'>
                                         <DatePicker
-                                            selected={dateReceipt}
+                                            selected={
+                                                item.date_received === undefined
+                                                    ? dateReceipt
+                                                    : new Date(item.date_received)
+                                            }
                                             onChange={(date) => setDateReceipt(date)}
                                             timeInputLabel="Time:"
                                             showTimeInput
@@ -196,7 +216,11 @@ export default function Involvement () {
                                     <label className='text-center'>Дата та час початку робіт</label>
                                     <div className='text-center'>
                                         <DatePicker
-                                            selected={startDate}
+                                            selected={
+                                                item.start_date === undefined
+                                                    ? startDate
+                                                    : new Date(item.start_date)
+                                            }
                                             onChange={(date) => setStartDate(date)}
                                             timeInputLabel="Time:"
                                             showTimeInput
@@ -209,7 +233,11 @@ export default function Involvement () {
                                     <label className='text-center'>Дата та час закінчення робіт</label>
                                     <div className='text-center'>
                                         <DatePicker
-                                            selected={endDate}
+                                            selected={
+                                                item.end_date === undefined
+                                                    ? endDate
+                                                    : new Date(item.end_date)
+                                            }
                                             onChange={(date) => setEndDate(date)}
                                             timeInputLabel="Time:"
                                             showTimeInput
@@ -220,7 +248,7 @@ export default function Involvement () {
                                 </div>
                                 <div className='flex flex-col p-1'>
                                     <label className='text-center'>Статус виконання робіт</label>
-                                    <select name='work_status'>
+                                    <select name='work_status' defaultValue={item.work_status}>
                                         <option value='done'>
                                             Виконано
                                         </option>
@@ -232,34 +260,30 @@ export default function Involvement () {
                                         </option>
                                     </select>
                                 </div>
-                                <PlaceExecutionInput/>
+                                <PlaceExecutionInput
+                                    defaultValue={item.place_execution}
+                                />
                                 <div className='flex flex-col p-1'>
                                     <p className='text-center'>Координати</p>
                                     <div className='flex justify-center ml-5'>
-                                        <div className='flex items-center ml-5'>
-                                            <label className='pr-4'>N</label>
-                                            <input
-                                                type='text'
-                                                className='form-input'
-                                                name='coordinates_north'
-                                                onChange={e => checkCoordinates(e)}
-                                            />
-                                        </div>
-                                        <div className='flex items-center ml-5'>
-                                            <label className='pr-4'>E</label>
-                                            <input
-                                                type='text'
-                                                className='form-input'
-                                                name='coordinates_east'
-                                                onChange={e => checkCoordinates(e)}
-                                            />
-                                        </div>
+                                        <Coordinates
+                                            name='coordinates_north'
+                                            coordinates={item.coordinates}
+                                            type='N'
+                                        />
+                                        <Coordinates
+                                            name='coordinates_east'
+                                            coordinates={item.coordinates}
+                                            type='E'
+                                        />
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div className='grid grid-cols-3 font-serif'>
-                            <PersonalSelect/>
+                            <PersonalSelect
+                                personal={item.persons}
+                            />
                             <div className='flex flex-col border-4 m-5 p-4'>
                                 <label className='text-center'>Обстежено території, га</label>
                                 <input
@@ -267,9 +291,12 @@ export default function Involvement () {
                                     className='form-input m-2'
                                     name='examined'
                                     onChange={e => checkFloatNumberValue(e)}
+                                    defaultValue={item.examined}
                                 />
                             </div>
-                            <AmmunitionInput/>
+                            <AmmunitionInput
+                                defaultValue={item.ammunition}
+                            />
                         </div>
                         <div className='grid grid-cols-2 border-4 m-5 p-5 font-serif'>
                             <div className='flex flex-col m-2'>
@@ -279,6 +306,7 @@ export default function Involvement () {
                                     className='form-input'
                                     name='tnt'
                                     onChange={e => checkFloatNumberValue(e)}
+                                    defaultValue={item.tnt}
                                 />
                             </div>
                             <div className='flex flex-col m-2'>
@@ -288,6 +316,7 @@ export default function Involvement () {
                                     className='form-input'
                                     name='detonator'
                                     onChange={e => checkNumberValue(e)}
+                                    defaultValue={item.detonator}
                                 />
                             </div>
                         </div>

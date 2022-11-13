@@ -35,7 +35,7 @@ function getPlaceExecution (event) {
     }
 }
 
-export default function PlaceExecutionInput () {
+export default function PlaceExecutionInput (props) {
     return (
         <div>
             <div className='flex flex-col p-1'>
@@ -46,6 +46,7 @@ export default function PlaceExecutionInput () {
                     className='form-input'
                     name='place_execution'
                     onChange={e => getPlaceExecution(e)}
+                    defaultValue={props.defaultValue}
                 />
                 <datalist id='place_execution'>
 

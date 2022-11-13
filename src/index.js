@@ -2,13 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import Main from "./container/Main";
-import Involvement, {action as sendReportAction} from "./container/content/Involvement";
+import Involvement, {action as sendReportAction, loader as involvementLoader} from "./container/content/Involvement";
 import Report from "./container/content/Report";
-import Overview, {loader as involvementsLoader} from "./container/content/Overview";
+import Overview, {loader as involvementsLoader, action as editInvolvementAction} from "./container/content/Overview";
 import reportWebVitals from './reportWebVitals';
 import {
     createBrowserRouter,
-    RouterProvider,
+    RouterProvider
 } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -26,10 +26,10 @@ const router = createBrowserRouter([
                 action: sendReportAction
             },
             {
-                path: "/involvement/edit",
+                path: "/involvement/:involvementId/edit",
                 element: <Involvement/>,
                 action: sendReportAction,
-                // loader: involvementLoader
+                loader: involvementLoader
             },
             {
                 path: "/report",
@@ -38,7 +38,8 @@ const router = createBrowserRouter([
             {
                 path: "/overview",
                 element: <Overview/>,
-                loader: involvementsLoader
+                loader: involvementsLoader,
+                action: editInvolvementAction
             },
         ]
     },
