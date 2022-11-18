@@ -1,7 +1,8 @@
-import { Form, useLoaderData } from "react-router-dom";
+import {Form, redirect, useLoaderData} from "react-router-dom";
 import { sendEngagementData } from "../http/sendData";
 import {getInvolvementData} from "../http/getData";
 import DatePicker from "react-datepicker";
+import toast from 'react-hot-toast';
 import "react-datepicker/dist/react-datepicker.css";
 import { useState } from "react";
 import PlaceExecutionInput from "./PlaceExecutionInput";
@@ -13,10 +14,9 @@ import checkFormData from "../validation/checkFormData";
 import PersonalSelect from "./PersonalSelect";
 import Coordinates from "./Coordinates";
 
-export async function action ({params}) {
-    let data = document.getElementById('report'),
-        formData = new FormData(data),
-        involvement = {},
+export async function action ({request, params}) {
+    const formData = await request.formData();
+    let involvement = {},
         person = [],
         ammunition = {},
         allAmmunitionName = formData.getAll('name_ammunition'),
@@ -64,7 +64,18 @@ export async function action ({params}) {
     if (!error) {
         document.getElementById('error').classList.add('hidden');
 
-        await sendEngagementData(involvement, params.involvementId);
+        await toast.promise(
+            sendEngagementData(involvement, params.involvementId),
+            {
+                loading: 'Sending...',
+                success: <b>Report sent!</b>,
+                error: <b>Sending error, please try again</b>,
+            }
+        );
+
+        localStorage.setItem(involvement.report_code, JSON.stringify(involvement));
+
+        return redirect('/overview');
     } else {
         document.getElementById('error').classList.remove('hidden');
     }
@@ -295,7 +306,8 @@ export default function Involvement () {
                                 />
                             </div>
                             <AmmunitionInput
-                                defaultValue={item.ammunition}
+                                ammunition={item.ammunition ?? ['']}
+                                allAmmunition={item.all_ammunition ?? '0'}
                             />
                         </div>
                         <div className='grid grid-cols-2 border-4 m-5 p-5 font-serif'>
@@ -320,9 +332,12 @@ export default function Involvement () {
                                 />
                             </div>
                         </div>
-                        <div className='m-5 font-serif'>
+                        <div className='m-5 font-serif flex'>
                             <button className='bg-green-600 p-3 rounded' type='submit' >
                                 Оформити
+                            </button>
+                            <button className='p-3 rounded' type='button' onClick={() => window.history.back()}>
+                                Відмінити
                             </button>
                         </div>
                     </Form>

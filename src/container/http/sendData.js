@@ -36,7 +36,7 @@ export function sendEngagementData (params, id = undefined) {
         }
     };
 
-    axios({
+    return axios({
         method: method,
         headers: {
             'Content-Type': 'application/json',
@@ -44,11 +44,5 @@ export function sendEngagementData (params, id = undefined) {
         },
         url: url,
         data: data
-    })
-    .then(response => {
-        console.log(response)
-    })
-    .catch(error => {
-        console.log(error)
-    })
+    });
 }

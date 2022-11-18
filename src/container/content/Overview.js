@@ -1,24 +1,24 @@
 import { getAllInvolvementData } from "../http/getData";
 import {useLoaderData, Form, redirect} from "react-router-dom";
 import removeData from "../http/removeData";
+import toast from 'react-hot-toast';
+import {useState} from "react";
 
 export async function loader() {
     const involvements = await getAllInvolvementData();
     return { involvements };
 }
 
-function removeInvolvement(id) {
-    let element = document.getElementById(id);
+async function removeInvolvement(id) {
+    return await removeData(id)
+        .then(() => {
+                toast.success('Report deleted');
 
-    removeData(id)
-        .then(response =>
-            element.remove()
-            //TODO add toast
+                return getAllInvolvementData();
+        })
+        .catch( () =>
+            toast.error('The report was not deleted, please try again')
         )
-        .catch(
-            //TODO add toast
-        )
-
 }
 
 export async function action({request}) {
@@ -34,18 +34,19 @@ function Ammunition(props) {
         list = [];
 
         for (let n = 0; n < name.length; n++) {
-            list.push([name[0], value[0]])
+            list.push([name[n], value[n]])
         }
 
     return(
         list.map((item, keys) =>
-            <p key={keys}>{item[0]}:{item[1]}</p>
+            <p key={keys}>{item[0]}: {item[1]}</p>
         )
     )
 }
 
 function Overview () {
     const { involvements } = useLoaderData();
+    const [involvement, setInvolvement] = useState(involvements)
 
     return (
         <>
@@ -54,8 +55,10 @@ function Overview () {
                     Таблиця залучень
                 </h2>
             </div>
-            <table className='table-auto container border-2'>
-                <thead>
+            {
+                involvement.data.data.attributes.length > 0 &&
+                <table className='table-auto container border-2'>
+                    <thead>
                     <tr className='border-2'>
                         <th className='border-2'>
                             Номер акту
@@ -79,58 +82,67 @@ function Overview () {
                             Знайдено ВНП
                         </th>
                     </tr>
-                </thead>
-                <tbody>
-                {
-                    involvements.data.data.attributes.map((involvement) => (
-                        <tr id={involvement.id} key={involvement.id} className='text-center border-2'>
-                            <td className='border-2'>
-                                {involvement.act_code}
-                            </td>
-                            <td className='border-2'>
-                                {involvement.report_code}
-                            </td>
-                            <td className='border-2'>
-                                {involvement.date_notification}
-                            </td>
-                            <td className='border-2'>
-                                {involvement.task_type}
-                            </td>
-                            <td className='border-2'>
-                                {involvement.place_execution}
-                            </td>
-                            <td className='border-2'>
-                                {involvement.examined}
-                            </td>
-                            <td className='border-2'>
-                                <Ammunition
-                                    ammunition={involvement.ammunition}
-                                />
-                            </td>
-                            <td className=' grid grid-column-1'>
-                                <Form method="post">
+                    </thead>
+                    <tbody>
+                    {
+                        involvement.data.data.attributes.map((involvement) => (
+                            <tr id={involvement.id} key={involvement.id} className='text-center border-2'>
+                                <td className='border-2'>
+                                    {involvement.act_code}
+                                </td>
+                                <td className='border-2'>
+                                    {involvement.report_code}
+                                </td>
+                                <td className='border-2'>
+                                    {involvement.date_notification}
+                                </td>
+                                <td className='border-2'>
+                                    {involvement.task_type}
+                                </td>
+                                <td className='border-2'>
+                                    {involvement.place_execution}
+                                </td>
+                                <td className='border-2'>
+                                    {involvement.examined} га
+                                </td>
+                                <td className='border-2'>
+                                    <Ammunition
+                                        ammunition={involvement.ammunition}
+                                    />
+                                </td>
+                                <td className=' grid grid-column-1'>
+                                    <Form method="post">
+                                        <button
+                                            type='submit'
+                                            name='id'
+                                            value={involvement.id}
+                                            className='border-2 bg-gray-200 hover:bg-gray-300 rounded-lg m-2'
+                                        >
+                                            Редагувати
+                                        </button>
+                                    </Form>
                                     <button
-                                        type='submit'
-                                        name='id'
-                                        value={involvement.id}
+                                        id={involvement.id}
                                         className='border-2 bg-gray-200 hover:bg-gray-300 rounded-lg m-2'
+                                        onClick={e =>{
+                                            removeInvolvement(involvement.id).then(
+                                                response => setInvolvement(response)
+                                            )
+                                        }}
                                     >
-                                        Редагувати
+                                        Видалити
                                     </button>
-                                </Form>
-                                <button
-                                    id={involvement.id}
-                                    className='border-2 bg-gray-200 hover:bg-gray-300 rounded-lg m-2'
-                                    onClick={e => removeInvolvement(involvement.id)}
-                                >
-                                    Видалити
-                                </button>
-                            </td>
-                        </tr>
-                    ))
-                }
-                </tbody>
-            </table>
+                                </td>
+                            </tr>
+                        ))
+                    }
+                    </tbody>
+                </table>
+            }
+            {
+                involvement.data.data.attributes.length === 0 &&
+                    <p className="text-center my-2 font-bold">Донесень немає</p>
+            }
         </>
     )
 }
