@@ -125,23 +125,32 @@ function convertDate(date) {
 
 export default function Involvement () {
     const {involvement} = useLoaderData() ?? [];
+
+    let item = involvement === undefined ? [] : involvement.data.data.attributes;
+
     const [dateReport, setDateReport] = useState(
-        new Date()
+        item.date_notification === undefined
+            ? new Date()
+            : new Date(item.date_notification)
     );
 
     const [dateReceipt, setDateReceipt] = useState(
-        new Date()
+        item.date_received === undefined
+            ? new Date()
+            : new Date(item.date_received)
     );
 
     const [startDate, setStartDate] = useState(
-        new Date()
+        item.start_date === undefined
+            ? new Date()
+            : new Date(item.start_date)
     );
 
     const [endDate, setEndDate] = useState(
-        new Date()
+        item.end_date === undefined
+            ? new Date()
+            : new Date(item.end_date)
     );
-
-    let item = involvement === undefined ? [] : involvement.data.data.attributes;
 
     return (
         <>
@@ -170,11 +179,7 @@ export default function Involvement () {
                                     <label className='text-center'>Дата донесення</label>
                                     <div className='text-center'>
                                         <DatePicker
-                                            selected={
-                                                item.date_notification === undefined
-                                                    ? dateReport
-                                                    : new Date(item.date_notification)
-                                            }
+                                            selected={dateReport}
                                             onChange={(date) => setDateReport(date)}
                                             dateFormat="MMMM d, yyyy"
                                             name='date_notification'
@@ -210,11 +215,7 @@ export default function Involvement () {
                                     <label className='text-center'>Дата та час отримання залучення</label>
                                     <div className='text-center'>
                                         <DatePicker
-                                            selected={
-                                                item.date_received === undefined
-                                                    ? dateReceipt
-                                                    : new Date(item.date_received)
-                                            }
+                                            selected={dateReceipt}
                                             onChange={(date) => setDateReceipt(date)}
                                             timeInputLabel="Time:"
                                             showTimeInput
@@ -227,11 +228,7 @@ export default function Involvement () {
                                     <label className='text-center'>Дата та час початку робіт</label>
                                     <div className='text-center'>
                                         <DatePicker
-                                            selected={
-                                                item.start_date === undefined
-                                                    ? startDate
-                                                    : new Date(item.start_date)
-                                            }
+                                            selected={startDate}
                                             onChange={(date) => setStartDate(date)}
                                             timeInputLabel="Time:"
                                             showTimeInput
@@ -244,11 +241,7 @@ export default function Involvement () {
                                     <label className='text-center'>Дата та час закінчення робіт</label>
                                     <div className='text-center'>
                                         <DatePicker
-                                            selected={
-                                                item.end_date === undefined
-                                                    ? endDate
-                                                    : new Date(item.end_date)
-                                            }
+                                            selected={endDate}
                                             onChange={(date) => setEndDate(date)}
                                             timeInputLabel="Time:"
                                             showTimeInput
