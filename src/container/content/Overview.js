@@ -34,7 +34,7 @@ function Ammunition(props) {
         list = [];
 
         for (let n = 0; n < name.length; n++) {
-            list.push([name[n], value[n]])
+            list.push([name[n].split('_').join(' '), value[n]])
         }
 
     return(
