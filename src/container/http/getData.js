@@ -23,5 +23,13 @@ export function getInvolvementData(id) {
 }
 
 export function getReportData(date) {
-
+    return axios({
+        method: 'get',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        url: 'http://localhost:8000/api/report?filter[date_from]=' + date.dateFrom +
+            '&filter[date_to]=' + date.dateTo,
+    })
 }
