@@ -21,3 +21,7 @@ export function getInvolvementData(id) {
         url: 'http://localhost:8000/api/involvement/' + id,
     })
 }
+
+export function getReportData(date) {
+
+}

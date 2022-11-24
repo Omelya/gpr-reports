@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import Main from "./container/Main";
 import Involvement, {action as sendReportAction, loader as involvementLoader} from "./container/content/Involvement";
-import Report from "./container/content/Report";
+import Report, {action as getReportAction} from "./container/content/Report";
 import Overview, {loader as involvementsLoader, action as editInvolvementAction} from "./container/content/Overview";
 import reportWebVitals from './reportWebVitals';
 import {
@@ -34,6 +34,7 @@ const router = createBrowserRouter([
             {
                 path: "/report",
                 element: <Report/>,
+                action: getReportAction
             },
             {
                 path: "/overview",
