@@ -93,7 +93,7 @@ export default function AmmunitionInput (props) {
             : [],
         ammunitionValue = props.ammunition[0] !== ''
             ? Object.values(ammunition)
-            : [''];
+            : [];
 
     const [ammo, setAmmunition] = useState(ammunitionType);
 
