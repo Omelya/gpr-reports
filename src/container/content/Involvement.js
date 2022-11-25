@@ -154,7 +154,7 @@ export default function Involvement () {
 
     return (
         <>
-            <div>
+            <div className='flex flex-col place-items-center'>
                 <div className='text-center mt-2'>
                     <h3 className='font-serif font-bold text-2xl'>Fill out the form</h3>
                 </div>

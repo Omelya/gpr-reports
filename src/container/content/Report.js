@@ -209,8 +209,8 @@ export default function Report () {
             </div>
             <hr style={{'borderBottom': 'solid 2px black'}}/>
             {report.length > 0 &&
-                <div className='text-center my-2 font-bold'>
-                    <h2>
+                <div className='flex flex-col place-items-center my-2 font-bold'>
+                    <h2 className='my-4'>
                         Звіт за період з {startDay} по {endDay}
                     </h2>
                         <div>

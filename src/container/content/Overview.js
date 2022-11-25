@@ -49,7 +49,7 @@ function Overview () {
     const [involvement, setInvolvement] = useState(involvements)
 
     return (
-        <>
+        <div className='flex flex-col place-items-center'>
             <div className='text-center my-2 font-bold'>
                 <h2>
                     Таблиця залучень
@@ -57,7 +57,7 @@ function Overview () {
             </div>
             {
                 involvement.data.data.attributes.length > 0 &&
-                <table className='table-auto container border-2'>
+                <table className='table-auto  border-2'>
                     <thead>
                     <tr className='border-2'>
                         <th className='border-2'>
@@ -143,7 +143,7 @@ function Overview () {
                 involvement.data.data.attributes.length === 0 &&
                     <p className="text-center my-2 font-bold">Донесень немає</p>
             }
-        </>
+        </div>
     )
 }
 
