@@ -49,6 +49,95 @@ function convertDate(date) {
     return [year, month, day].join('-');
 }
 
+function Column(props) {
+    let name = Object.keys(props.item)[0];
+
+    return (
+        <>
+            <tr className='flex flex-col'>
+                <th className='border-2 p-3' >
+                    {name}
+                </th>
+                <th className='border-2'>
+                    {props.item[name]['Виконано заявок'] ?? 0}
+                </th>
+                <th className='border-2'>
+                    {props.item[name]['Проведено залучень'] ?? 0}
+                </th>
+                <th className='border-2'>
+                    {props.item[name]['Обстежено території'].toFixed(2) ?? 0}
+                </th>
+                <th className='border-2'>
+                    {props.item[name]['Виявлені ВНП']['Саморобний вибуховий пристрій'] ?? 0}
+                </th>
+                <th className='border-2'>
+                    {props.item[name]['Виявлені ВНП']['Протипіхотна міна'] ?? 0}
+                </th>
+                <th className='border-2'>
+                    {props.item[name]['Виявлені ВНП']['Протитанкова міна'] ?? 0}
+                </th>
+                <th className='border-2'>
+                    {props.item[name]['Виявлені ВНП']['Міна пастка'] ?? 0}
+                </th>
+                <th className='border-2'>
+                    {props.item[name]['Виявлені ВНП']['Протикорабельна міна'] ?? 0}
+                </th>
+                <th className='border-2'>
+                    {props.item[name]['Виявлені ВНП']['Реактивний снаряд'] ?? 0}
+                </th>
+                <th className='border-2'>
+                    {props.item[name]['Виявлені ВНП']['Артилерійський снаряд'] ?? 0}
+                </th>
+                <th className='border-2'>
+                    {props.item[name]['Виявлені ВНП']['Мінометна міна'] ?? 0}
+                </th>
+                <th className='border-2'>
+                    {props.item[name]['Виявлені ВНП']['Граната'] ?? 0}
+                </th>
+                <th className='border-2'>
+                    {props.item[name]['Виявлені ВНП']['Авіаційна бомба'] ?? 0}
+                </th>
+                <th className='border-2'>
+                    {props.item[name]['Виявлені ВНП']['Касетний боєприпас'] ?? 0}
+                </th>
+                <th className='border-2'>
+                    {props.item[name]['Виявлені ВНП']['Касетний елемент'] ?? 0}
+                </th>
+                <th className='border-2'>
+                    {props.item[name]['Виявлені ВНП']['Торпеди'] ?? 0}
+                </th>
+                <th className='border-2'>
+                    {props.item[name]['Виявлені ВНП']['Підривник'] ?? 0}
+                </th>
+                <th className='border-2'>
+                    {props.item[name]['Виявлені ВНП']['Набої'] ?? 0}
+                </th>
+                <th className='border-2'>
+                    {props.item[name]['Виявлені ВНП']['Вибухова речовина'] ?? 0}
+                </th>
+                <th className='border-2'>
+                    {props.item[name]['Виявлені ВНП']['Інші ВНП'] ?? 0}
+                </th>
+                <th className='border-2'>
+                    {props.item[name]['Виявлені ВНП']['Всього ВНП'] ?? 0}
+                </th>
+                <th className='border-2'>
+                    {props.item[name]['Використано тротилу'] ?? 0}
+                </th>
+                <th className='border-2'>
+                    {props.item[name]['Використано детонаторів'] ?? 0}
+                </th>
+                <th className='border-2'>
+                    {props.item[name]['Кількість навчань'] ?? 0}
+                </th>
+                <th className='border-2'>
+                    {props.item[name]['Охоплено осіб'] ?? 0}
+                </th>
+            </tr>
+        </>
+    )
+}
+
 export default function Report () {
     const [startDate, setStartDate] = useState(
         new Date(getStartDate())
@@ -235,88 +324,10 @@ export default function Report () {
                                 <tbody className='flex'>
                                 {report.map((item, key) =>
                                     (
-                                        <>
-                                            <tr className='flex flex-col' key={key}>
-                                                <th className='border-2 p-3'>
-                                                    {Object.keys(item)[0]}
-                                                </th>
-                                                <th className='border-2'>
-                                                    {item[Object.keys(item)[0]]['Виконано заявок']}
-                                                </th>
-                                                <th className='border-2'>
-                                                    {item[Object.keys(item)[0]]['Проведено залучень']}
-                                                </th>
-                                                <th className='border-2'>
-                                                    {item[Object.keys(item)[0]]['Обстежено території'].toFixed(2)}
-                                                </th>
-                                                <th className='border-2'>
-                                                    {item[Object.keys(item)[0]]['Виявлені ВНП']['Саморобний вибуховий пристрій'] ?? 0}
-                                                </th>
-                                                <th className='border-2'>
-                                                    {item[Object.keys(item)[0]]['Виявлені ВНП']['Протипіхотна міна'] ?? 0}
-                                                </th>
-                                                <th className='border-2'>
-                                                    {item[Object.keys(item)[0]]['Виявлені ВНП']['Протитанкова міна'] ?? 0}
-                                                </th>
-                                                <th className='border-2'>
-                                                    {item[Object.keys(item)[0]]['Виявлені ВНП']['Міна пастка'] ?? 0}
-                                                </th>
-                                                <th className='border-2'>
-                                                    {item[Object.keys(item)[0]]['Виявлені ВНП']['Протикорабельна міна'] ?? 0}
-                                                </th>
-                                                <th className='border-2'>
-                                                    {item[Object.keys(item)[0]]['Виявлені ВНП']['Реактивний снаряд'] ?? 0}
-                                                </th>
-                                                <th className='border-2'>
-                                                    {item[Object.keys(item)[0]]['Виявлені ВНП']['Артилерійський снаряд'] ?? 0}
-                                                </th>
-                                                <th className='border-2'>
-                                                    {item[Object.keys(item)[0]]['Виявлені ВНП']['Мінометна міна'] ?? 0}
-                                                </th>
-                                                <th className='border-2'>
-                                                    {item[Object.keys(item)[0]]['Виявлені ВНП']['Граната'] ?? 0}
-                                                </th>
-                                                <th className='border-2'>
-                                                    {item[Object.keys(item)[0]]['Виявлені ВНП']['Авіаційна бомба'] ?? 0}
-                                                </th>
-                                                <th className='border-2'>
-                                                    {item[Object.keys(item)[0]]['Виявлені ВНП']['Касетний боєприпас'] ?? 0}
-                                                </th>
-                                                <th className='border-2'>
-                                                    {item[Object.keys(item)[0]]['Виявлені ВНП']['Касетний елемент'] ?? 0}
-                                                </th>
-                                                <th className='border-2'>
-                                                    {item[Object.keys(item)[0]]['Виявлені ВНП']['Торпеди'] ?? 0}
-                                                </th>
-                                                <th className='border-2'>
-                                                    {item[Object.keys(item)[0]]['Виявлені ВНП']['Підривник'] ?? 0}
-                                                </th>
-                                                <th className='border-2'>
-                                                    {item[Object.keys(item)[0]]['Виявлені ВНП']['Набої'] ?? 0}
-                                                </th>
-                                                <th className='border-2'>
-                                                    {item[Object.keys(item)[0]]['Виявлені ВНП']['Вибухова речовина'] ?? 0}
-                                                </th>
-                                                <th className='border-2'>
-                                                    {item[Object.keys(item)[0]]['Виявлені ВНП']['Інші ВНП'] ?? 0}
-                                                </th>
-                                                <th className='border-2'>
-                                                    {item[Object.keys(item)[0]]['Виявлені ВНП']['Всього ВНП'] ?? 0}
-                                                </th>
-                                                <th className='border-2'>
-                                                    {item[Object.keys(item)[0]]['Використано тротилу'] ?? 0}
-                                                </th>
-                                                <th className='border-2'>
-                                                    {item[Object.keys(item)[0]]['Використано детонаторів'] ?? 0}
-                                                </th>
-                                                <th className='border-2'>
-                                                    {item[Object.keys(item)[0]]['Кількість навчань'] ?? 0}
-                                                </th>
-                                                <th className='border-2'>
-                                                    {item[Object.keys(item)[0]]['Охоплено осіб'] ?? 0}
-                                                </th>
-                                            </tr>
-                                        </>
+                                        <Column
+                                            item={item}
+                                            key={key}
+                                        />
                                     ))}
                                 </tbody>
                             </table>
