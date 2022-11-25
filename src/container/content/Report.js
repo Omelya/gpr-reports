@@ -4,11 +4,17 @@ import {getReportData} from "../http/getData";
 
 async function getReport() {
     let dateFrom = document.getElementsByName('date_from')[0].value,
-        dateTo = document.getElementsByName('date_to')[0].value;
+        dateTo = document.getElementsByName('date_to')[0].value,
+        reportsType = document.getElementsByName('reports_type')[0].value;
+
+    if (reportsType === 'Всі звіти') {
+        reportsType = 'all';
+    }
 
     return await getReportData({
         dateFrom: convertDate(dateFrom),
-        dateTo: convertDate(dateTo)
+        dateTo: convertDate(dateTo),
+        reportsType: reportsType
     });
 }
 
@@ -101,6 +107,15 @@ export default function Report () {
                             name='date_from'
                         />
                     </div>
+                </div>
+                <div className='m-1'>
+                    <p className='text-xs font-medium p-1'>Тип звіту</p>
+                    <select name='reports_type'>
+                        <option>Всі звіти</option>
+                        <option>ОР</option>
+                        <option>ГР</option>
+                        <option>ТО</option>
+                    </select>
                 </div>
             </div>
             <hr style={{'borderBottom': 'solid 2px black'}}/>
@@ -221,7 +236,7 @@ export default function Report () {
                                 {report.map((item, key) =>
                                     (
                                         <>
-                                            <tr className='flex flex-col'>
+                                            <tr className='flex flex-col' key={key}>
                                                 <th className='border-2 p-3'>
                                                     {Object.keys(item)[0]}
                                                 </th>
