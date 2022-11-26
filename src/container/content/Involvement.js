@@ -329,9 +329,12 @@ export default function Involvement () {
                             <button className='bg-green-600 p-3 rounded' type='submit' >
                                 Оформити
                             </button>
-                            <button className='p-3 rounded' type='button' onClick={() => window.history.back()}>
-                                Відмінити
-                            </button>
+                            {
+                                involvement !== undefined &&
+                                <button className='p-3 rounded' type='button' onClick={() => window.history.back()}>
+                                    Відмінити
+                                </button>
+                            }
                         </div>
                     </Form>
                 </div>
