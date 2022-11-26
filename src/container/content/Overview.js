@@ -10,11 +10,14 @@ export async function loader() {
 }
 
 async function removeInvolvement(id) {
+    let order = document.getElementsByName('order')[0].value,
+        direction = document.getElementsByName('direction')[0].value;
+
     return await removeData(id)
         .then(() => {
                 toast.success('Report deleted');
 
-                return getAllInvolvementData();
+                return getAllInvolvementData(order, direction);
         })
         .catch( () =>
             toast.error('The report was not deleted, please try again')
@@ -44,6 +47,13 @@ function Ammunition(props) {
     )
 }
 
+function sorting() {
+    let order = document.getElementsByName('order')[0].value,
+        direction = document.getElementsByName('direction')[0].value;
+
+    return getAllInvolvementData(order, direction)
+}
+
 function Overview () {
     const { involvements } = useLoaderData();
     const [involvement, setInvolvement] = useState(involvements)
@@ -54,6 +64,32 @@ function Overview () {
                 <h2>
                     Таблиця залучень
                 </h2>
+            </div>
+            <div className='mb-2'>
+                <p className='p-1'>Сортування за</p>
+                <select name='order'>
+                    <option value='date_notification'>
+                        датою донесення
+                    </option>
+                    <option value='examined'>
+                        площею обстеження
+                    </option>
+                </select>
+                <select name='direction'>
+                    <option value='asc'>
+                        за зростанням
+                    </option>
+                    <option value='desc'>
+                        за зменшенням
+                    </option>
+                </select>
+                <button
+                    className='bg-green-400 p-2 ml-2 rounded-lg'
+                    onClick={() => sorting().then(
+                        response => setInvolvement(response)
+                )}>
+                    Сортувати
+                </button>
             </div>
             {
                 involvement.data.data.attributes.length > 0 &&
