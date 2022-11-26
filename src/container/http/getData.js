@@ -1,13 +1,14 @@
 import axios from "axios";
 
-export function getAllInvolvementData() {
+export function getAllInvolvementData(order = 'date_notification', direction = 'asc') {
     return axios({
         method: 'get',
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         },
-        url: 'http://localhost:8000/api/all-involvement',
+        url: 'http://localhost:8000/api/all-involvement?filter[order]=' + order +
+            '&filter[direction]=' + direction,
     })
 }
 

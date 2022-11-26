@@ -7,10 +7,6 @@ async function getReport() {
         dateTo = document.getElementsByName('date_to')[0].value,
         reportsType = document.getElementsByName('reports_type')[0].value;
 
-    if (reportsType === 'Всі звіти') {
-        reportsType = 'all';
-    }
-
     return await getReportData({
         dateFrom: convertDate(dateFrom),
         dateTo: convertDate(dateTo),
@@ -200,10 +196,10 @@ export default function Report () {
                 <div className='m-1'>
                     <p className='text-xs font-medium p-1'>Тип звіту</p>
                     <select name='reports_type'>
-                        <option>Всі звіти</option>
-                        <option>ОР</option>
-                        <option>ГР</option>
-                        <option>ТО</option>
+                        <option value='all'>Всі звіти</option>
+                        <option value='ОР'>ОР</option>
+                        <option value='ГР'>ГР</option>
+                        <option value='ТО'>ТО</option>
                     </select>
                 </div>
             </div>
