@@ -87,14 +87,13 @@ function Input(props) {
 export default function AmmunitionInput (props) {
     let ammunition = props.ammunition[0] !== ''
             ? JSON.parse(props.ammunition)
-            : [''],
-        ammunitionType = props.ammunition[0] !== ''
+            : [],
+        ammunitionType = Object.keys(ammunition).length !== 0
             ? Object.keys(ammunition)
             : [],
-        ammunitionValue = props.ammunition[0] !== ''
+        ammunitionValue = Object.values(ammunition).length !== 0
             ? Object.values(ammunition)
             : [];
-
     const [ammo, setAmmunition] = useState(ammunitionType);
 
     return (
@@ -110,9 +109,10 @@ export default function AmmunitionInput (props) {
                 )}
             </div>
             <div>
-                <button onClick={() => {
-                    ammo.push('');
-                    setAmmunition(ammo);
+                <button type='button' onClick={() => {
+                    ammunitionType.push('');
+                    setAmmunition(ammunitionType);
+                    console.log(ammo)
                 }}>
                     Добавити поле
                 </button>
