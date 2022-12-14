@@ -2,7 +2,7 @@ APP = gpr-reports-front
 
 .PHONY: install
 install:
-	npm install
+	docker exec $(APP) npm install
 
 .PHONY: bash
 bash:
