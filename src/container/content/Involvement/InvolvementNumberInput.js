@@ -1,13 +1,14 @@
-import checkNumberValue from "../validation/checkNumberValue";
- function getType(code) {
+import {checkNumberValue} from "../../validation/checkNumberValue";
+
+ const getType = (code) => {
     return code.substr(0, 2)
  }
 
- function getNumber(code) {
+ const getNumber = (code) => {
     return code.split('/')[1]
  }
 
-export default function InvolvementNumberInput (props) {
+export default (props) => {
     const year = new Date().getFullYear();
     const name = props.name === 'act_number' ? 'Номер акта' : 'Номер донесення';
     let involvementType = props.defaultValue === undefined ? '' : getType(props.defaultValue);

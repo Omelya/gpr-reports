@@ -1,8 +1,8 @@
-import { getAllInvolvementData } from "../http/getData";
-import {useLoaderData, Form, redirect} from "react-router-dom";
-import removeData from "../http/removeData";
-import toast from 'react-hot-toast';
 import {useState} from "react";
+import toast from 'react-hot-toast';
+import removeData from "../../http/removeData";
+import {getAllInvolvementData} from "../../http/getData";
+import {useLoaderData, Form, redirect} from "react-router-dom";
 
 export async function loader() {
     const involvements = await getAllInvolvementData();
@@ -54,7 +54,7 @@ function sorting() {
     return getAllInvolvementData(order, direction)
 }
 
-function Overview () {
+export default () => {
     const { involvements } = useLoaderData();
     const [involvement, setInvolvement] = useState(involvements)
 
@@ -182,5 +182,3 @@ function Overview () {
         </div>
     )
 }
-
-export default Overview;
