@@ -15,10 +15,12 @@ const numberAmmunition = () => {
 
     input.value = value;
 }
+
 const checkValue = (e) => {
     checkNumberValue(e)
     numberAmmunition()
 }
+
 const getAmmunition = (e) => {
     let value = e.currentTarget.value,
         ammunitionList = [],
@@ -42,6 +44,7 @@ const getAmmunition = (e) => {
         })
     }
 }
+
 export default (props) => {
     const dispatch = useDispatch();
 
