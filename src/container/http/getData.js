@@ -12,17 +12,6 @@ export function getAllInvolvementData(order = 'date_notification', direction = '
     })
 }
 
-export function getInvolvementData(id) {
-    return axios({
-        method: 'get',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        url: 'http://localhost:8000/api/involvement/' + id,
-    })
-}
-
 export function getReportData(filters) {
     return axios({
         method: 'get',

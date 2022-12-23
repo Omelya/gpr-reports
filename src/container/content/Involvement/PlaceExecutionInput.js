@@ -1,6 +1,6 @@
-import populatedAreas from "../JSON/populatedAreas.json"
+import populatedAreas from "../../JSON/populatedAreas.json"
 
-function getPlaceExecution (event) {
+const getPlaceExecution = (event) => {
     let value = event.currentTarget.value,
         placeExecution = [],
         datalist = document.getElementById('place_execution');
@@ -35,7 +35,7 @@ function getPlaceExecution (event) {
     }
 }
 
-export default function PlaceExecutionInput (props) {
+export default (props) => {
     return (
         <div>
             <div className='flex flex-col p-1'>

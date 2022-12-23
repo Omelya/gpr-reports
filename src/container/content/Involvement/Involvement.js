@@ -1,21 +1,23 @@
-import {Form, redirect, useLoaderData} from "react-router-dom";
-import { sendEngagementData } from "../http/sendData";
-import {getInvolvementData} from "../http/getData";
-import DatePicker from "react-datepicker";
+import {useState} from "react";
 import toast from 'react-hot-toast';
-import "react-datepicker/dist/react-datepicker.css";
-import { useState } from "react";
-import PlaceExecutionInput from "./PlaceExecutionInput";
-import AmmunitionInput from "./AmmunitionInput";
-import InvolvementNumberInput from "./InvolvementNumberInput";
-import checkNumberValue from "../validation/checkNumberValue";
-import checkFloatNumberValue from "../validation/checkFloatNumberValue";
-import checkFormData from "../validation/checkFormData";
-import PersonalSelect from "./PersonalSelect";
 import Coordinates from "./Coordinates";
+import {useSelector} from "react-redux";
+import DatePicker from "react-datepicker";
+import PersonalSelect from "./PersonalSelect";
+import {Form, redirect} from "react-router-dom";
+import Ammunition from "./Ammunition/Ammunition";
+import "react-datepicker/dist/react-datepicker.css";
+import {sendEngagementData} from "../../http/sendData";
+import PlaceExecutionInput from "./PlaceExecutionInput";
+import checkFormData from "../../validation/checkFormData";
+import convertDate from "../../../helpers/date/convertDate";
+import InvolvementNumberInput from "./InvolvementNumberInput";
+import {checkNumberValue} from "../../validation/checkNumberValue";
+import checkFloatNumberValue from "../../validation/checkFloatNumberValue";
 
 export async function action ({request, params}) {
     const formData = await request.formData();
+
     let involvement = {},
         person = [],
         ammunition = {},
@@ -81,52 +83,11 @@ export async function action ({request, params}) {
     }
 }
 
-export async function loader({params}) {
-    const involvement = await getInvolvementData(params.involvementId);
 
-    return {involvement}
-}
+export default (props) => {
+    const involvement = useSelector(state => state.involvement)
 
-function convertDate(date) {
-    let dateObject = new Date(date),
-        day = '' + dateObject.getDate(),
-        month = '' + (dateObject.getMonth() + 1),
-        year = dateObject.getFullYear(),
-        split = date.split(' ');
-
-    if (month.length < 2) {
-        month = '0' + month;
-    }
-
-    if (day.length < 2) {
-        day = '0' + day;
-    }
-
-    if (split.length > 3) {
-        let hour = String(dateObject.getHours()),
-            minutes = String(dateObject.getMinutes());
-
-        if (hour.length < 2) {
-            hour = '0' + hour;
-        }
-
-        if (minutes.length < 2) {
-            minutes = '0' + minutes;
-        }
-
-        let time = [hour, minutes].join(':'),
-            date = [year, month, day].join('-');
-
-        return date + ' ' + time;
-    }
-
-    return [year, month, day].join('-');
-}
-
-export default function Involvement () {
-    const {involvement} = useLoaderData() ?? [];
-
-    let item = involvement === undefined ? [] : involvement.data.data.attributes;
+    let item = involvement.length === 0 ? [] : involvement.data.attributes;
 
     const [dateReport, setDateReport] = useState(
         item.date_notification === undefined
@@ -298,8 +259,8 @@ export default function Involvement () {
                                     defaultValue={item.examined}
                                 />
                             </div>
-                            <AmmunitionInput
-                                ammunition={item.ammunition ?? ['']}
+                            <Ammunition
+                                ammunition={item.ammunition}
                                 allAmmunition={item.all_ammunition ?? '0'}
                             />
                         </div>
@@ -330,7 +291,7 @@ export default function Involvement () {
                                 Оформити
                             </button>
                             {
-                                involvement !== undefined &&
+                                props.action === 'edit' &&
                                 <button className='p-3 rounded' type='button' onClick={() => window.history.back()}>
                                     Відмінити
                                 </button>

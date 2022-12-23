@@ -1,6 +1,6 @@
-import personal from "../JSON/personal.json"
+import personal from "../../JSON/personal.json"
 
-function addPerson () {
+const addPerson = () => {
     let element = document.getElementById('personnel'),
         select = document.createElement('select');
 
@@ -17,7 +17,7 @@ function addPerson () {
     element.append(select);
 }
 
-export default function PersonalSelect (props) {
+export default (props) => {
     let persons = [],
         loadPersonal = props.personal === undefined
             ? ['']

@@ -1,6 +1,6 @@
-import checkCoordinates from "../validation/checkCoordinates";
+import checkCoordinates from "../../validation/checkCoordinates";
 
-export default function Coordinates(props) {
+export default (props) => {
     let coordinates = props.coordinates === undefined
         ? ''
         : JSON.parse(props.coordinates)[`${props.type}`];

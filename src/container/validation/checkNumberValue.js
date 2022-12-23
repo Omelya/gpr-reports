@@ -1,4 +1,4 @@
-export default function checkNumberValue (e) {
+export const checkNumberValue = (e) => {
     e.currentTarget.value = e.currentTarget.value.replace( /[^0-9]/, '');
     e.currentTarget.classList.remove('border-red-700');
     e.currentTarget.classList.remove('border-2');
