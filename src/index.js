@@ -4,12 +4,19 @@ import App from './App';
 import store from "./redux/store";
 import Main from "./container/Main";
 import {Provider} from "react-redux";
+import {RequireAuth} from 'react-auth-kit'
 import reportWebVitals from './reportWebVitals';
 import Report from "./container/content/Report/Report";
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import {cleanUpInvolvement, fetchInvolvement} from "./redux/reducer/involvementReducer";
 import Involvement, {action as sendReportAction} from "./container/content/Involvement/Involvement";
 import Overview, {loader as involvementsLoader, action as editInvolvementAction} from "./container/content/Overview/Overview";
+import Login, {action as authUser} from "./container/content/Login/Login";
+import Signin, {action as userCreateAction} from "./container/content/Signin/Signin";
+import {AuthProvider} from "react-auth-kit";
+import MyPage from "./container/content/MyPage/MyPage";
+
+window.token = document.cookie.split('; ').find(item => item.startsWith('_auth'))?.split('=')[1];
 
 const router = createBrowserRouter([
     {
@@ -22,7 +29,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/involvement",
-                element: <Involvement action={'create'}/>,
+                element: <RequireAuth loginPath={'/login'} children={<Involvement action={'create'}/>}/>,
                 action: sendReportAction,
                 loader: () => {
                     store.dispatch(cleanUpInvolvement([]))
@@ -30,7 +37,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/involvement/:involvementId/edit",
-                element: <Involvement action={'edit'}/>,
+                element: <RequireAuth loginPath={'/login'} children={<Involvement action={'edit'}/>}/>,
                 action: sendReportAction,
                 loader: ({params}) => {
                     store.dispatch(fetchInvolvement(params.involvementId))
@@ -38,14 +45,29 @@ const router = createBrowserRouter([
             },
             {
                 path: "/report",
-                element: <Report/>
+                element: <RequireAuth loginPath={'/login'} children={<Report/>}/>
             },
             {
                 path: "/overview",
-                element: <Overview/>,
+                element: <RequireAuth loginPath={'/login'} children={<Overview/>}/>,
                 loader: involvementsLoader,
                 action: editInvolvementAction
             },
+            {
+                path: "/login",
+                element: <Login/>,
+                action: authUser
+            },
+            {
+                path: "/signin",
+                element: <Signin/>,
+                action: userCreateAction
+            },
+            {
+                path: "/my-page",
+                element: <MyPage/>,
+                action: authUser
+            }
         ]
     },
 ]);
@@ -55,7 +77,14 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <Provider store={store}>
         <React.StrictMode>
-            <RouterProvider router={router}/>
+            <AuthProvider
+                authType = {'cookie'}
+                authName={'_auth'}
+                cookieDomain={window.location.hostname}
+                cookieSecure={window.location.protocol === "http:"}
+            >
+                <RouterProvider router={router}/>
+            </AuthProvider>
         </React.StrictMode>
     </Provider>
 );

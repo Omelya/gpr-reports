@@ -15,53 +15,50 @@ import InvolvementNumberInput from "./InvolvementNumberInput";
 import {checkNumberValue} from "../../validation/checkNumberValue";
 import checkFloatNumberValue from "../../validation/checkFloatNumberValue";
 
-export async function action ({request, params}) {
+export async function action({ request, params }) {
     const formData = await request.formData();
+    const keys = [
+        'act_type',
+        'act_number',
+        'report_type',
+        'report_number',
+        'person',
+        'name_ammunition',
+        'number_ammunition'
+    ];
+    let involvement = {};
+    let person = [];
+    let ammunition = {};
+    const year = new Date().getFullYear();
+    const allAmmunitionName = formData.getAll('name_ammunition');
+    const allNumberAmmunition = formData.getAll('number_ammunition');
 
-    let involvement = {},
-        person = [],
-        ammunition = {},
-        allAmmunitionName = formData.getAll('name_ammunition'),
-        allNumberAmmunition = formData.getAll('number_ammunition'),
-        year = new Date().getFullYear(),
-        keys = [
-            'act_type',
-            'act_number',
-            'report_type',
-            'report_number',
-            'person',
-            'name_ammunition',
-            'number_ammunition'
-        ];
-
-        let error = checkFormData(formData)
+    const error = checkFormData(formData);
 
     for (const [key, value] of formData.entries()) {
-        if (keys.includes(key)) {
-            continue;
+        if (!keys.includes(key)) {
+            involvement[key] = value;
         }
-
-        involvement[key] = value;
     }
 
-    for (let name of formData.getAll('person')) {
-        person.push(name);
-    }
+    formData.getAll('person').forEach(name => person.push(name));
 
-    for (let i = 0; i < formData.getAll('name_ammunition').length; i++) {
-        let name = allAmmunitionName[i].replace(/\s/gi, '_');
+    allAmmunitionName.forEach((name, i) => {
+        const cleanedName = name.replace(/\s/gi, '_');
+        ammunition[cleanedName] = allNumberAmmunition[i];
+    });
 
-        ammunition[name] = allNumberAmmunition[i];
-    }
-
-    involvement['date_notification'] = convertDate(involvement['date_notification'])
-    involvement['date_received'] = convertDate(involvement['date_received']);
-    involvement['start_date'] = convertDate(involvement['start_date']);
-    involvement['end_date'] = convertDate(involvement['end_date']);
-    involvement['persons'] = person;
-    involvement['ammunition'] = ammunition
-    involvement['act_code'] = [formData.get('act_type'), '-08-', year, '/',formData.get('act_number')].join('');
-    involvement['report_code'] = [formData.get('report_type'), '-08-', year, '/',formData.get('report_number')].join('');
+    involvement = {
+        ...involvement,
+        date_notification: convertDate(involvement['date_notification']),
+        date_received: convertDate(involvement['date_received']),
+        start_date: convertDate(involvement['start_date']),
+        end_date: convertDate(involvement['end_date']),
+        persons: person,
+        ammunition: ammunition,
+        act_code: `${formData.get('act_type')}-08-${year}/${formData.get('act_number')}`,
+        report_code: `${formData.get('report_type')}-08-${year}/${formData.get('report_number')}`
+    };
 
     if (!error) {
         document.getElementById('error').classList.add('hidden');
@@ -77,12 +74,11 @@ export async function action ({request, params}) {
 
         localStorage.setItem(involvement.report_code, JSON.stringify(involvement));
 
-        return redirect('/overview');
+        return redirect('/');
     } else {
         document.getElementById('error').classList.remove('hidden');
     }
 }
-
 
 export default (props) => {
     const involvement = useSelector(state => state.involvement)
