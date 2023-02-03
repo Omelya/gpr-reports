@@ -14,6 +14,7 @@ import Overview, {loader as involvementsLoader, action as editInvolvementAction}
 import Login, {action as authUser} from "./container/content/Login/Login";
 import Signin, {action as userCreateAction} from "./container/content/Signin/Signin";
 import {AuthProvider} from "react-auth-kit";
+import MyPage from "./container/content/MyPage/MyPage";
 
 window.token = document.cookie.split('; ').find(item => item.startsWith('_auth'))?.split('=')[1];
 
@@ -61,6 +62,11 @@ const router = createBrowserRouter([
                 path: "/signin",
                 element: <Signin/>,
                 action: userCreateAction
+            },
+            {
+                path: "/my-page",
+                element: <MyPage/>,
+                action: authUser
             }
         ]
     },

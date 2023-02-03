@@ -38,7 +38,7 @@ function Header() {
                     </div>
                     <div className='flex'>
                         <div className='p-2'>
-                            <Link to='/signin'>
+                            <Link to='/my-page'>
                                 Мій профіль
                             </Link>
                         </div>
