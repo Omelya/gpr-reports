@@ -1,4 +1,4 @@
-FROM node:19.2.0
+FROM node:14.21.2
 
 WORKDIR /app
 
@@ -8,4 +8,4 @@ RUN cd /app npm install
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["npm", "install"]
