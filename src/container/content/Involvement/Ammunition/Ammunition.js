@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from "react";
 import AmmunitionInput from "./AmmunitionInput";
 import PropTypes from "prop-types";
-import {Button, FormControl, Input, InputLabel, Paper, Typography} from "@mui/material";
-import Box from "@mui/material/Box";
+import {Box, Button, FormControl, Input, InputLabel, Paper, Typography} from "@mui/material";
 
 const Ammunition = (props) => {
     const [ammunition, setAmmunition] = useState([]);
