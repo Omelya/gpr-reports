@@ -21,7 +21,7 @@ const AmmunitionInput = (props) => {
             name_ammunition: props.ammunition.replace(/(_|\\s)+/g, ' '),
             number_ammunition: props.value,
         },
-        validationSchema: validationSchema('number_ammunition')
+        validationSchema: validationSchema('name_ammunition','number_ammunition')
     });
 
     useEffect(() => {
@@ -62,6 +62,8 @@ const AmmunitionInput = (props) => {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         label='Enter the type of ammunition'
+                        error={touched.name_ammunition && Boolean(errors.name_ammunition)}
+                        helperText={touched.name_ammunition && errors.name_ammunition}
                     />
                 }
                 sx={{
