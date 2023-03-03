@@ -8,11 +8,11 @@ import {RequireAuth} from 'react-auth-kit'
 import reportWebVitals from './reportWebVitals';
 import Report from "./container/content/Report/Report";
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
-import {cleanUpInvolvement, fetchInvolvement} from "./redux/reducer/involvementReducer";
+import {fetchInvolvement} from "./redux/reducer/involvementReducer";
 import Involvement, {action as sendReportAction} from "./container/content/Involvement/Involvement";
 import Overview, {loader as involvementsLoader, action as editInvolvementAction} from "./container/content/Overview/Overview";
 import Login, {action as authUser} from "./container/content/Login/Login";
-import Signin, {action as userCreateAction} from "./container/content/Signin/Signin";
+import SignIn, {action as userCreateAction} from "./container/content/SignIn/SignIn";
 import {AuthProvider} from "react-auth-kit";
 import MyPage from "./container/content/MyPage/MyPage";
 
@@ -29,27 +29,25 @@ const router = createBrowserRouter([
             },
             {
                 path: "/involvement",
-                element: <RequireAuth loginPath={'/login'} children={<Involvement action={'create'}/>}/>,
+                element: <RequireAuth loginPath={'/login'}><Involvement action={'create'}/></RequireAuth>,
                 action: sendReportAction,
-                loader: () => {
-                    store.dispatch(cleanUpInvolvement([]))
-                }
             },
             {
                 path: "/involvement/:involvementId/edit",
-                element: <RequireAuth loginPath={'/login'} children={<Involvement action={'edit'}/>}/>,
+                element: <RequireAuth loginPath={'/login'}><Involvement action={'edit'}/></RequireAuth>,
                 action: sendReportAction,
                 loader: ({params}) => {
                     store.dispatch(fetchInvolvement(params.involvementId))
+                    return true;
                 }
             },
             {
                 path: "/report",
-                element: <RequireAuth loginPath={'/login'} children={<Report/>}/>
+                element: <RequireAuth loginPath={'/login'}><Report/></RequireAuth>
             },
             {
                 path: "/overview",
-                element: <RequireAuth loginPath={'/login'} children={<Overview/>}/>,
+                element: <RequireAuth loginPath={'/login'}><Overview/></RequireAuth>,
                 loader: involvementsLoader,
                 action: editInvolvementAction
             },
@@ -60,13 +58,12 @@ const router = createBrowserRouter([
             },
             {
                 path: "/signin",
-                element: <Signin/>,
+                element: <SignIn/>,
                 action: userCreateAction
             },
             {
                 path: "/my-page",
-                element: <MyPage/>,
-                action: authUser
+                element: <RequireAuth loginPath={'/login'}><MyPage/></RequireAuth>,
             }
         ]
     },

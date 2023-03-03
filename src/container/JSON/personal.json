@@ -1,5 +1,6 @@
 [
   {
+    "id": 1,
     "first_name": "Сергій",
     "second_name": "Шалаєнко",
     "rank": "полковник служби ЦЗ",
@@ -8,6 +9,7 @@
     "admission": true
   },
   {
+    "id": 2,
     "first_name": "Андрій",
     "second_name": "Єдинак",
     "rank": "підполковник служби ЦЗ",
@@ -16,6 +18,7 @@
     "admission": true
   },
   {
+    "id": 3,
     "first_name": "Михайло",
     "second_name": "Варга",
     "rank": "майор служби ЦЗ",
@@ -24,6 +27,7 @@
     "admission": true
   },
   {
+    "id": 4,
     "first_name": "Владислав",
     "second_name": "Омеляненко",
     "rank": "старший лейтенант служби ЦЗ",
@@ -32,6 +36,7 @@
     "admission": true
   },
   {
+    "id": 5,
     "first_name": "Степан",
     "second_name": "Мовнар",
     "rank": "прапорщик служби ЦЗ",
@@ -40,6 +45,7 @@
     "admission": true
   },
   {
+    "id": 6,
     "first_name": "Микита",
     "second_name": "Гуцол",
     "rank": "прапорщик служби ЦЗ",
@@ -48,6 +54,7 @@
     "admission": true
   },
   {
+    "id": 7,
     "first_name": "Максим",
     "second_name": "Мельничук",
     "rank": "старший сержант служби ЦЗ",
@@ -56,6 +63,7 @@
     "admission": true
   },
   {
+    "id": 8,
     "first_name": "Максим",
     "second_name": "Ротний",
     "rank": "сержант служби ЦЗ",
@@ -64,6 +72,7 @@
     "admission": true
   },
   {
+    "id": 9,
     "first_name": "Євген",
     "second_name": "Янчик",
     "rank": "молодший сержант служби ЦЗ",
@@ -72,6 +81,7 @@
     "admission": true
   },
   {
+    "id": 10,
     "first_name": "Юрій",
     "second_name": "Мовнар",
     "rank": "прапорщик служби ЦЗ",
@@ -80,6 +90,7 @@
     "admission": true
   },
   {
+    "id": 11,
     "first_name": "Микола",
     "second_name": "Синяк",
     "rank": "старшина служби ЦЗ",
@@ -88,6 +99,7 @@
     "admission": true
   },
   {
+    "id": 12,
     "first_name": "Василь",
     "second_name": "Галайка",
     "rank": "сержант служби ЦЗ",
@@ -96,6 +108,7 @@
     "admission": true
   },
   {
+    "id": 13,
     "first_name": "Денис",
     "second_name": "Крайниковець",
     "rank": "рядовий служби ЦЗ",
@@ -104,6 +117,7 @@
     "admission": true
   },
   {
+    "id": 14,
     "first_name": "Сергій",
     "second_name": "Бондарюк",
     "rank": "страший прапорщик служби ЦЗ",
@@ -112,6 +126,7 @@
     "admission": true
   },
   {
+    "id": 15,
     "first_name": "Андрій",
     "second_name": "Гацош",
     "rank": "сержант служби ЦЗ",
@@ -120,6 +135,7 @@
     "admission": true
   },
   {
+    "id": 16,
     "first_name": "Марк",
     "second_name": "Осадчук",
     "rank": "прапорщик служби ЦЗ",
@@ -128,6 +144,7 @@
     "admission": true
   },
   {
+    "id": 17,
     "first_name": "Михайло",
     "second_name": "Ігнатко",
     "rank": "сержант служби ЦЗ",
@@ -136,6 +153,7 @@
     "admission": true
   },
   {
+    "id": 18,
     "first_name": "Дмитро",
     "second_name": "Митро",
     "rank": "рядовий служби ЦЗ",
@@ -144,6 +162,7 @@
     "admission": true
   },
   {
+    "id": 19,
     "first_name": "Евген",
     "second_name": "Фалайло",
     "rank": "рядовий служби ЦЗ",
@@ -152,6 +171,7 @@
     "admission": true
   },
   {
+    "id": 20,
     "first_name": "Віктор",
     "second_name": "Бартованець",
     "rank": "рядовий служби ЦЗ",
@@ -160,6 +180,7 @@
     "admission": true
   },
   {
+    "id": 21,
     "first_name": "Мар'ян",
     "second_name": "Лазарь",
     "rank": "рядовий служби ЦЗ",

@@ -42,7 +42,7 @@ export function sendEngagementData (params, id = undefined) {
     };
 
     return getCsrfToken().then(() => {
-        axios({
+        return axios({
           method: method,
           headers: {
               'Content-Type': 'application/json',

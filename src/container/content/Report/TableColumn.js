@@ -1,4 +1,7 @@
-export default (props) => {
+import React from "react";
+import PropTypes from "prop-types";
+
+const TableColumn = (props) => {
     let name = Object.keys(props.item)[0];
 
     return (
@@ -86,3 +89,9 @@ export default (props) => {
         </>
     )
 }
+
+TableColumn.propTypes = {
+    item: PropTypes.object
+}
+
+export default TableColumn;

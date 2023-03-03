@@ -1,10 +1,16 @@
-function Footer () {
+import React from "react";
+import Container from "@mui/material/Container";
+import {Typography} from "@mui/material";
+
+const Footer = () => {
     return (
-        <div className='bg-gray-400 rounded'>
-            <div className=''>
+        <Container maxWidth={"xl"} sx={{backgroundColor: '#1976d2'}}>
+            <Typography sx={{
+                color: "#fff"
+            }}>
                 Footer
-            </div>
-        </div>
+            </Typography>
+        </Container>
     )
 }
 
