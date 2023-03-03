@@ -1,19 +1,23 @@
-import {useState} from "react";
-import toast from 'react-hot-toast';
-import Coordinates from "./Coordinates";
+import React, {useEffect} from "react";
+import toast from "react-hot-toast";
 import {useSelector} from "react-redux";
-import DatePicker from "react-datepicker";
 import PersonalSelect from "./PersonalSelect";
 import {Form, redirect} from "react-router-dom";
 import Ammunition from "./Ammunition/Ammunition";
-import "react-datepicker/dist/react-datepicker.css";
 import {sendEngagementData} from "../../http/sendData";
-import PlaceExecutionInput from "./PlaceExecutionInput";
-import checkFormData from "../../validation/checkFormData";
-import convertDate from "../../../helpers/date/convertDate";
-import InvolvementNumberInput from "./InvolvementNumberInput";
-import {checkNumberValue} from "../../validation/checkNumberValue";
-import checkFloatNumberValue from "../../validation/checkFloatNumberValue";
+import PlaceExecutionInput from "./PlaceExecutionInput/PlaceExecutionInput";
+import InvolvementNumberReportInput from "./involvementNumberReportInput/InvolvementNumberReportInput";
+import StatusSelect from "./StatusSelect";
+import Datetime from "./Datetime";
+import {Alert, AlertTitle, Typography} from "@mui/material";
+import PropTypes from "prop-types";
+import CoordinatesBlock from "./Coordinates/CoordinatesBlock";
+import Examined from "./Examined/Examined";
+import ExplosivesInput from "./Explosives/ExplosivesInput";
+import {Box, Button, Paper} from "@mui/material";
+import {useFormik} from "formik";
+
+let errorsMessage;
 
 export async function action({ request, params }) {
     const formData = await request.formData();
@@ -33,8 +37,6 @@ export async function action({ request, params }) {
     const allAmmunitionName = formData.getAll('name_ammunition');
     const allNumberAmmunition = formData.getAll('number_ammunition');
 
-    const error = checkFormData(formData);
-
     for (const [key, value] of formData.entries()) {
         if (!keys.includes(key)) {
             involvement[key] = value;
@@ -50,252 +52,279 @@ export async function action({ request, params }) {
 
     involvement = {
         ...involvement,
-        date_notification: convertDate(involvement['date_notification']),
-        date_received: convertDate(involvement['date_received']),
-        start_date: convertDate(involvement['start_date']),
-        end_date: convertDate(involvement['end_date']),
         persons: person,
         ammunition: ammunition,
         act_code: `${formData.get('act_type')}-08-${year}/${formData.get('act_number')}`,
         report_code: `${formData.get('report_type')}-08-${year}/${formData.get('report_number')}`
     };
 
-    if (!error) {
-        document.getElementById('error').classList.add('hidden');
+    return sendEngagementData(involvement, params.involvementId)
+        .then( () => {
+            toast.success('Report sent!');
+            localStorage.setItem(involvement.report_code, JSON.stringify(involvement));
 
-        await toast.promise(
-            sendEngagementData(involvement, params.involvementId),
-            {
-                loading: 'Sending...',
-                success: <b>Report sent!</b>,
-                error: <b>Sending error, please try again</b>,
+            return redirect('/');
+        })
+        .catch(error => {
+            toast.error('Sending error, please try again');
+
+            if (error.response.status !== 422) {
+                errorsMessage = error.message;
+            } else {
+                errorsMessage = [];
+
+                for (let item in error.response.data.errors) {
+                    errorsMessage.push(error.response.data.errors[item]);
+                }
             }
-        );
 
-        localStorage.setItem(involvement.report_code, JSON.stringify(involvement));
-
-        return redirect('/');
-    } else {
-        document.getElementById('error').classList.remove('hidden');
-    }
+            return false;
+        });
 }
 
-export default (props) => {
-    const involvement = useSelector(state => state.involvement)
+const initialValues = {
+    act_code: `ОР-08-${new Date().getFullYear()}/`,
+    report_code: `ОР-08-${new Date().getFullYear()}/`,
+    date_notification: new Date(),
+    date_received: new Date(),
+    start_date: new Date(),
+    end_date: new Date(),
+    task_type: 'Prompt response to detection of GNP',
+    work_status: 'Done',
+    place_execution: '',
+    coordinates: undefined,
+    examined: 0,
+    tnt: 0,
+    detonator: 0,
+    persons: undefined,
+    ammunition: undefined,
+    all_ammunition: 0,
+}
 
-    let item = involvement.length === 0 ? [] : involvement.data.attributes;
+const Involvement = (props) => {
+    const involvement = useSelector(state => state.involvement);
 
-    const [dateReport, setDateReport] = useState(
-        item.date_notification === undefined
-            ? new Date()
-            : new Date(item.date_notification)
-    );
+    const {
+        values,
+        setValues
+    } = useFormik({
+        initialValues,
+    });
 
-    const [dateReceipt, setDateReceipt] = useState(
-        item.date_received === undefined
-            ? new Date()
-            : new Date(item.date_received)
-    );
+    useEffect(() => {
+        if (involvement.data) {
+            setValues({
+                act_code: involvement.data.attributes.act_code,
+                report_code: involvement.data.attributes.report_code,
+                date_notification: involvement.data.attributes.date_notification,
+                date_received: involvement.data.attributes.date_received,
+                start_date: involvement.data.attributes.start_date,
+                end_date: involvement.data.attributes.end_date,
+                task_type: involvement.data.attributes.task_type,
+                work_status: involvement.data.attributes.work_status,
+                place_execution: involvement.data.attributes.place_execution,
+                coordinates: involvement.data.attributes.coordinates,
+                examined: involvement.data.attributes.examined,
+                tnt: involvement.data.attributes.tnt,
+                detonator: involvement.data.attributes.detonator,
+                persons: involvement.data.attributes.persons,
+                ammunition: involvement.data.attributes.ammunition,
+                all_ammunition: involvement.data.attributes.all_ammunition,
+            });
+        }
+    }, [involvement]);
 
-    const [startDate, setStartDate] = useState(
-        item.start_date === undefined
-            ? new Date()
-            : new Date(item.start_date)
-    );
-
-    const [endDate, setEndDate] = useState(
-        item.end_date === undefined
-            ? new Date()
-            : new Date(item.end_date)
-    );
+    useEffect(() => {
+        if (props.action === 'create') {
+            setValues(initialValues);
+        }
+    }, [props.action])
 
     return (
         <>
-            <div className='flex flex-col place-items-center'>
-                <div className='text-center mt-2'>
-                    <h3 className='font-serif font-bold text-2xl'>Fill out the form</h3>
-                </div>
-                <div>
-                    <Form method="post" id='report'>
-                        <div className='flex flex-col'>
-                            <div id='error' className='border-2 border-red-700 bg-red-200 hidden'>
-                                <p className='p-2'>There are empty fields</p>
-                            </div>
-                            <div className='grid grid-cols-2 border-4 m-5 p-5'>
-                                <InvolvementNumberInput
-                                    name='act_number'
-                                    type='act_type'
-                                    defaultValue={item.act_code}
-                                />
-                                <InvolvementNumberInput
-                                    name='report_number'
-                                    type='report_type'
-                                    defaultValue={item.report_code}
-                                />
-                                <div className='flex flex-col p-1 font-serif'>
-                                    <label className='text-center'>Дата донесення</label>
-                                    <div className='text-center'>
-                                        <DatePicker
-                                            selected={dateReport}
-                                            onChange={(date) => setDateReport(date)}
-                                            dateFormat="MMMM d, yyyy"
-                                            name='date_notification'
-                                        />
-                                    </div>
-                                </div>
-                                <div className='flex flex-col p-1 font-serif'>
-                                    <label className='text-center'>Тип завдання</label>
-                                    <select name='task_type' defaultValue={item.task_type}>
-                                        <option>
-                                            оперативне реагування на виявлення ВНП
-                                        </option>
-                                        <option>
-                                            технічне обстеження території
-                                        </option>
-                                        <option>
-                                            очищення (розмінування) території
-                                        </option>
-                                        <option>
-                                            роботи на договірній основі
-                                        </option>
-                                        <option>
-                                            навчання населення ризикам пов'язаних з ВНП
-                                        </option>
-                                        <option>
-                                            тощо
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div className='grid grid-rows-3 grid-flow-col border-4 m-5 p-5 font-serif'>
-                                <div className='flex flex-col p-1'>
-                                    <label className='text-center'>Дата та час отримання залучення</label>
-                                    <div className='text-center'>
-                                        <DatePicker
-                                            selected={dateReceipt}
-                                            onChange={(date) => setDateReceipt(date)}
-                                            timeInputLabel="Time:"
-                                            showTimeInput
-                                            dateFormat="MMMM d, yyyy hh:mm"
-                                            name='date_received'
-                                        />
-                                    </div>
-                                </div>
-                                <div className='flex flex-col p-1'>
-                                    <label className='text-center'>Дата та час початку робіт</label>
-                                    <div className='text-center'>
-                                        <DatePicker
-                                            selected={startDate}
-                                            onChange={(date) => setStartDate(date)}
-                                            timeInputLabel="Time:"
-                                            showTimeInput
-                                            dateFormat="MMMM d, yyyy hh:mm"
-                                            name='start_date'
-                                        />
-                                    </div>
-                                </div>
-                                <div className='flex flex-col p-1'>
-                                    <label className='text-center'>Дата та час закінчення робіт</label>
-                                    <div className='text-center'>
-                                        <DatePicker
-                                            selected={endDate}
-                                            onChange={(date) => setEndDate(date)}
-                                            timeInputLabel="Time:"
-                                            showTimeInput
-                                            dateFormat="MMMM d, yyyy hh:mm"
-                                            name='end_date'
-                                        />
-                                    </div>
-                                </div>
-                                <div className='flex flex-col p-1'>
-                                    <label className='text-center'>Статус виконання робіт</label>
-                                    <select name='work_status' defaultValue={item.work_status}>
-                                        <option value='done'>
-                                            Виконано
-                                        </option>
-                                        <option value='is_performed'>
-                                            Виконується
-                                        </option>
-                                        <option value='execution_suspended'>
-                                            Призупинено виконання
-                                        </option>
-                                    </select>
-                                </div>
-                                <PlaceExecutionInput
-                                    defaultValue={item.place_execution}
-                                />
-                                <div className='flex flex-col p-1'>
-                                    <p className='text-center'>Координати</p>
-                                    <div className='flex justify-center ml-5'>
-                                        <Coordinates
-                                            name='coordinates_north'
-                                            coordinates={item.coordinates}
-                                            type='N'
-                                        />
-                                        <Coordinates
-                                            name='coordinates_east'
-                                            coordinates={item.coordinates}
-                                            type='E'
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className='grid grid-cols-3 font-serif'>
-                            <PersonalSelect
-                                personal={item.persons}
-                            />
-                            <div className='flex flex-col border-4 m-5 p-4'>
-                                <label className='text-center'>Обстежено території, га</label>
-                                <input
-                                    type='text'
-                                    className='form-input m-2'
-                                    name='examined'
-                                    onChange={e => checkFloatNumberValue(e)}
-                                    defaultValue={item.examined}
-                                />
-                            </div>
-                            <Ammunition
-                                ammunition={item.ammunition}
-                                allAmmunition={item.all_ammunition ?? '0'}
-                            />
-                        </div>
-                        <div className='grid grid-cols-2 border-4 m-5 p-5 font-serif'>
-                            <div className='flex flex-col m-2'>
-                                <label className='text-center'>Використано тротилу</label>
-                                <input
-                                    type='text'
-                                    className='form-input'
-                                    name='tnt'
-                                    onChange={e => checkFloatNumberValue(e)}
-                                    defaultValue={item.tnt}
-                                />
-                            </div>
-                            <div className='flex flex-col m-2'>
-                                <label className='text-center'>Використано детонаторів</label>
-                                <input
-                                    type='text'
-                                    className='form-input'
-                                    name='detonator'
-                                    onChange={e => checkNumberValue(e)}
-                                    defaultValue={item.detonator}
-                                />
-                            </div>
-                        </div>
-                        <div className='m-5 font-serif flex'>
-                            <button className='bg-green-600 p-3 rounded' type='submit' >
-                                Оформити
-                            </button>
+            <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                placeItems: 'center',
+                backgroundColor: 'rgba(243, 244, 246)'
+            }}>
+                <Box sx={{textAlign: 'center', marginTop: '0.5rem'}}>
+                    <h3 className='font-serif font-bold text-2xl'>Report form</h3>
+                </Box>
+                <Form method="post" id='report'>
+
+                    {
+                        errorsMessage &&
+                        <Alert severity="error">
+                            <AlertTitle>Error</AlertTitle>
+
                             {
-                                props.action === 'edit' &&
-                                <button className='p-3 rounded' type='button' onClick={() => window.history.back()}>
-                                    Відмінити
-                                </button>
+                                typeof errorsMessage === 'object' &&
+                                errorsMessage.map((item) =>
+                                    item.map((message, key) =>
+                                        <Typography key={key}>{message}</Typography>
+                                    )
+                                )
                             }
-                        </div>
-                    </Form>
-                </div>
-            </div>
+
+                            {
+                                typeof errorsMessage === 'string' &&
+                                <Typography>{errorsMessage}</Typography>
+                            }
+
+                        </Alert>
+                    }
+
+                    <Box sx={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+                        margin: '1.25rem'
+                    }}>
+                        <Paper elevation={3} sx={{
+                            display: 'grid',
+                            gridTemplateRows: 'repeat(2, minmax(0, 1fr))',
+                            marginRight: '0.6rem',
+                            padding: '1.25rem'
+                        }}>
+                            <InvolvementNumberReportInput
+                                name='report_number'
+                                type='report_type'
+                                defaultValue={values.report_code}
+                            />
+                            <InvolvementNumberReportInput
+                                name='act_number'
+                                type='act_type'
+                                defaultValue={values.act_code}
+                            />
+                        </Paper>
+                        <Paper elevation={3} sx={{
+                            display: 'grid',
+                            gridTemplateRows: 'repeat(2, minmax(0, 1fr))',
+                            marginLeft: '0.6rem',
+                            padding: '1.25rem',
+                            justifyItems: 'flex-end',
+                        }}>
+                            <Datetime
+                                label="Report date"
+                                name="date_notification"
+                                value={values.date_notification}
+                            />
+                            <StatusSelect
+                                label="Task type"
+                                name="task_type"
+                                value={values.task_type}
+                                style={{maxWidth: 350}}
+                                item={[
+                                    'prompt response to detection of GNP',
+                                    'technical survey of the territory',
+                                    'cleaning (demining) of the territory',
+                                    'work on a contractual basis',
+                                    'educating the population about the risks associated with GNP',
+                                    'etc.'
+                                ]}
+                            />
+                        </Paper>
+                    </Box>
+                    <Paper elevation={3} sx={{
+                        display: 'grid',
+                        gridTemplateRows: 'repeat(3, minmax(0, 1fr))',
+                        gridAutoFlow: 'column',
+                        margin: '1.25rem',
+                        padding: '1.25rem'
+                    }}>
+                        <Datetime
+                            label="Date receipt of engagement"
+                            name="date_received"
+                            dateFormat="YYYY-MM-DD HH:mm"
+                            value={values.date_received}
+                        />
+                        <Datetime
+                            label="Date start of work"
+                            name="start_date"
+                            dateFormat="YYYY-MM-DD HH:mm"
+                            value={values.start_date}
+                        />
+                        <Datetime
+                            label="End date of work"
+                            name="end_date"
+                            dateFormat="YYYY-MM-DD HH:mm"
+                            value={values.end_date}
+                        />
+                        <StatusSelect
+                            label="Work progress status"
+                            value={values.work_status}
+                            name="work_status"
+                            style={{width: 220}}
+                            item={[
+                                'done',
+                                'is performed',
+                                'execution suspended',
+                            ]}
+                        />
+                        <PlaceExecutionInput
+                            value={values.place_execution}
+                        />
+                        <CoordinatesBlock
+                            coordinates={values.coordinates}
+                        />
+                    </Paper>
+                    <Paper elevation={3} sx={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+                        margin: '1.25rem',
+                        padding: '1.25rem'
+                    }}>
+                        <Examined
+                            value={values.examined}
+                        />
+                        <ExplosivesInput
+                            label="TNT was used"
+                            name="tnt"
+                            measurement="kg"
+                            value={values.input}
+                        />
+                        <ExplosivesInput
+                            label="Detonators used"
+                            name="detonator"
+                            measurement="pcs"
+                            value={values.detonator}
+                        />
+                    </Paper>
+                    <Box sx={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(9, minmax(0, 1fr))',
+                        margin: '1.25rem'
+                    }}>
+                        <PersonalSelect
+                            personal={values.persons}
+                        />
+                        <Ammunition
+                            ammunition={values.ammunition}
+                            allAmmunition={values.all_ammunition}
+                        />
+                    </Box>
+                    <Box sx={{
+                        margin: '1.25rem',
+                        display: 'flex',
+                        justifyContent: 'center'
+                    }}>
+                        <Button type="submit" variant="contained" sx={{margin: '10px'}}>
+                            Send
+                        </Button>
+                        {
+                            props.action === 'edit' &&
+                            <Button variant="contained" onClick={() => window.history.back()} sx={{margin: '10px'}}>
+                                Cancel
+                            </Button>
+                        }
+                    </Box>
+                </Form>
+            </Box>
         </>
     )
 }
+
+Involvement.propTypes = {
+    action: PropTypes.string.isRequired
+}
+export default Involvement;

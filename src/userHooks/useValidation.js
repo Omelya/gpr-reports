@@ -4,6 +4,10 @@ export const useValidation = (value, validations) => {
     const [isEmpty, setEmpty] = useState(true);
     const [minLengthError, setMinLengthError] = useState(false);
 
+    if (value === undefined) {
+        value = '';
+    }
+
     useEffect(() => {
         for (const validation in validations) {
             switch (validation) {

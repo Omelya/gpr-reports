@@ -1,4 +1,4 @@
-import {useState} from "react";
+import React, {useState} from "react";
 import TableColumn from "./TableColumn";
 import DatePicker from "react-datepicker";
 import {getReportData} from "../../http/getData";
@@ -17,7 +17,7 @@ const getReport = async () => {
     });
 }
 
-export default () => {
+const Report = () => {
     const [startDate, setStartDate] = useState(
         new Date(getStartDate())
     );
@@ -36,7 +36,7 @@ export default () => {
             <div className='flex flex-row-reverse'>
                 <div className='m-1'>
                     <button
-                        onClick={(e) => getReport().then(
+                        onClick={() => getReport().then(
                             response => {
                                 let reports = [],
                                     n = 0
@@ -217,3 +217,5 @@ export default () => {
         </>
     )
 }
+
+export default Report;

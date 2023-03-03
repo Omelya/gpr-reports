@@ -2,10 +2,12 @@ import {Form, Navigate, useActionData} from "react-router-dom";
 import Input from "./Input/Input";
 import convertDate from "../../../helpers/date/convertDate";
 import InputSelect from "./Input/InputSelect";
-import {useEffect} from "react";
+import React, {useEffect} from "react";
 import {sendUser} from "../../http/sendData";
 import {useIsAuthenticated, useSignIn} from 'react-auth-kit';
 import {setToken} from "../../../helpers/token/token";
+import {Button} from "@mui/material";
+import Container from "@mui/material/Container";
 
 export async function action({request}) {
     const formData = await request.formData();
@@ -16,7 +18,7 @@ export async function action({request}) {
         });
 }
 
-export default () => {
+const SignIn = () => {
     const userData = useActionData();
     const signIn = useSignIn();
     const isAuth = useIsAuthenticated();
@@ -91,7 +93,7 @@ export default () => {
                         id='birthday'
                         name='Birthday'
                         type='date'
-                        val={date}
+                        value={date}
                         isEmpty={true}
                     />
                     <InputSelect
@@ -104,11 +106,19 @@ export default () => {
                         name='Rank'
                         isEmpty={true}
                     />
-                    <button className='m-2 p-4 rounded hover:bg-gray-100 border-gray-400 bg-gray-400' type='submit'>
-                        Sign in
-                    </button>
+                    <Container>
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            size="large">
+                            Sign in
+                        </Button>
+                    </Container>
                 </Form>
             </div>
         </>
     )
 }
+
+export default SignIn;

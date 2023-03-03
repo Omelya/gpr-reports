@@ -10,7 +10,7 @@ export const useInput = (initialValue, validations) => {
         setValue(e.target.value);
     }
 
-    const onBlur = (e) => {
+    const onBlur = () => {
         setDirty(true)
     }
 

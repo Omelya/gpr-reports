@@ -1,3 +1,4 @@
+import React from "react";
 import Header from "./container/Header";
 import Footer from "./container/Footer";
 import { Outlet } from "react-router-dom";
@@ -8,24 +9,25 @@ import './index.css';
 
 function App() {
     return (
-        <Container maxWidth={"xl"}>
-            <div className="h-screen flex flex-col h-screen">
+        <Box sx={{
+            backgroundColor: 'rgba(243, 244, 246)'
+        }}>
+            <Container maxWidth={"xl"} sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                minHeight: '100vh',
+                justifyContent: 'space-between'
+            }}>
+                <Toaster
+                    position="top-left"
+                    reverseOrder={false}
+                />
                 <CssBaseline/>
                 <Header/>
-                <div className='flex-grow'>
-                    <Toaster
-                        position="top-left"
-                        reverseOrder={false}
-                    />
-                    <Outlet/>
-                </div>
-                <Box component="footer" sx={{
-                    flexShrink: 0
-                }}>
-                    <Footer/>
-                </Box>
-            </div>
-        </Container>
+                <Outlet/>
+                <Footer/>
+            </Container>
+        </Box>
     );
 }
 

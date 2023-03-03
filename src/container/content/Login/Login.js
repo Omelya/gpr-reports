@@ -1,9 +1,12 @@
+import React from "react";
 import {Form, Navigate, useActionData} from "react-router-dom";
-import Input from "../Signin/Input/Input";
-import {useEffect} from "react";
+import Input from "../SignIn/Input/Input";
+import {useEffect, useState} from "react";
 import {authUser} from "../../http/sendData";
 import {useIsAuthenticated, useSignIn} from 'react-auth-kit'
 import {setToken} from "../../../helpers/token/token";
+import {Alert, AlertTitle, Button, Typography} from "@mui/material";
+import Container from "@mui/material/Container";
 
 export async function action({request}) {
     const formData = await request.formData();
@@ -12,15 +15,19 @@ export async function action({request}) {
         .then(response => {
             return response.data;
         })
+        .catch((error) => {
+            return JSON.parse(error.request.response);
+        })
 }
 
-export default () => {
+const Login = () => {
     const userData = useActionData();
     const signIn = useSignIn();
     const isAuth = useIsAuthenticated();
+    const [errorMessage, setError] = useState('');
 
     useEffect(() => {
-        if(userData) {
+        if(userData?.data) {
             const expiresMinutes = Math.floor(
                 Date.parse(userData.data.attributes.token.expires_at) / 1000 / 60
             );
@@ -36,6 +43,10 @@ export default () => {
 
             setToken(userData.data.attributes.token.access_token);
         }
+
+        if (userData?.message) {
+            setError(userData.message);
+        }
     }, [userData])
 
     return (
@@ -44,30 +55,48 @@ export default () => {
                 isAuth() && <Navigate to={'/involvement'}/>
             }
             <div className='flex flex-col place-items-center'>
-                <div>
-                    <h1 className='font-serif font-bold text-2xl mt-5'>
-                        Log in
-                    </h1>
-                </div>
+                <Typography variant="h5" component="h5" sx={{
+                    fontWeight: "bold",
+                    fontFamily: "ui-serif, Georgia, Cambria, Times New Roman, Times, serif"
+                }}>
+                    Log in
+                </Typography>
+
+                {
+                    errorMessage &&
+                    <Alert severity="error" onClose={() => {setError('')}}>
+                        <AlertTitle>Error</AlertTitle>
+                        {errorMessage}
+                    </Alert>
+                }
+
                 <Form method='post'>
                     <Input
                         id='username'
                         name='Email'
                         type='email'
-                        isEmpty={true}
+                        isEmpty={false}
                     />
                     <Input
                         id='password'
                         name='Password'
                         type='password'
-                        isEmpty={true}
+                        isEmpty={false}
                         minLength={8}
                     />
-                    <button className='m-2 p-4 rounded hover:bg-gray-100 border-gray-400 bg-gray-400' type='submit'>
-                        Log in
-                    </button>
+                    <Container>
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            size="large">
+                            Log in
+                        </Button>
+                    </Container>
                 </Form>
             </div>
         </>
     )
 }
+
+export default Login;

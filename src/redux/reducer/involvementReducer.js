@@ -40,6 +40,4 @@ const involvementSlice = createSlice({
     }
 })
 
-export const {cleanUpInvolvement} = involvementSlice.actions;
-
 export default involvementSlice.reducer;

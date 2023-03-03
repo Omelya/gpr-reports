@@ -1,3 +1,4 @@
+import React from "react";
 import {useState} from "react";
 import toast from 'react-hot-toast';
 import removeData from "../../http/removeData";
@@ -31,7 +32,7 @@ export async function action({request}) {
     return redirect(`/involvement/${id}/edit`);
 }
 
-function Ammunition(props) {
+const Ammunition = (props) => {
     let name = Object.keys(JSON.parse(props.ammunition)),
         value = Object.values(JSON.parse(props.ammunition)),
         list = [];
@@ -54,7 +55,7 @@ function sorting() {
     return getAllInvolvementData(order, direction)
 }
 
-export default () => {
+const Overview = () => {
     const { involvements } = useLoaderData();
     const [involvement, setInvolvement] = useState(involvements)
 
@@ -133,7 +134,7 @@ export default () => {
                                     {involvement.date_notification}
                                 </td>
                                 <td className='border-2'>
-                                    {involvement.task_type}
+                                    {involvement.task_type.split('_').join(' ')}
                                 </td>
                                 <td className='border-2'>
                                     {involvement.place_execution}
@@ -160,7 +161,7 @@ export default () => {
                                     <button
                                         id={involvement.id}
                                         className='border-2 bg-gray-200 hover:bg-gray-300 rounded-lg m-2'
-                                        onClick={e =>{
+                                        onClick={() =>{
                                             removeInvolvement(involvement.id).then(
                                                 response => setInvolvement(response)
                                             )
@@ -182,3 +183,5 @@ export default () => {
         </div>
     )
 }
+
+export default Overview;

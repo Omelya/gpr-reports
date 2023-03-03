@@ -1,11 +1,9 @@
-FROM node:14.21.2
+FROM node:19.6.0
 
 WORKDIR /app
 
 COPY . /app
 
-RUN cd /app npm install
-
 EXPOSE 3000
 
-CMD ["/bin/bash", "-c", "npm install && npm start"]
+CMD ["npm", "start"]

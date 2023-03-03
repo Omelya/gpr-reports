@@ -1,87 +1,104 @@
-import {useDispatch} from "react-redux";
+import React, {useEffect} from "react";
 import ammunition from "../../../JSON/ammunition.json";
-import closeIcons from "../../../../img/icons/icons.svg";
-import {checkNumberValue} from "../../../validation/checkNumberValue";
-import {deleteAmmunition} from "../../../../redux/reducer/ammunitionReducer";
+import PropTypes from "prop-types";
+import {Autocomplete, FormControl, TextField} from "@mui/material";
+import Box from "@mui/material/Box";
+import DeleteIcon from "@mui/icons-material/Delete";
+import IconButton from "@mui/material/IconButton";
+import {useFormik} from "formik";
+import validationSchema from "./validationSchema";
 
-const numberAmmunition = () => {
-    let input = document.getElementById('all_ammunition'),
-        ammunition = document.querySelectorAll('.number'),
-        value = 0;
+const AmmunitionInput = (props) => {
+    const {
+        values,
+        handleChange,
+        setFieldValue,
+        handleBlur,
+        touched,
+        errors
+    } = useFormik({
+        initialValues: {
+            name_ammunition: props.ammunition.replace(/(_|\\s)+/g, ' '),
+            number_ammunition: props.value,
+        },
+        validationSchema: validationSchema('name_ammunition','number_ammunition')
+    });
 
-    for (let i = 0; i < ammunition.length; i++) {
-        value += Number(ammunition[i].value);
-    }
-
-    input.value = value;
-}
-
-const checkValue = (e) => {
-    checkNumberValue(e)
-    numberAmmunition()
-}
-
-const getAmmunition = (e) => {
-    let value = e.currentTarget.value,
-        ammunitionList = [],
-        datalist = document.getElementById('ammunition_list');
-
-    e.currentTarget.classList.remove('border-red-700');
-    e.currentTarget.classList.remove('border-2');
-
-    while (datalist.firstChild) {
-        datalist.removeChild(datalist.firstChild);
-    }
-
-    if (value.length > 2) {
-        ammunitionList = ammunition.filter(e => e.type.search(value.toLowerCase()) !== -1);
-
-        ammunitionList.forEach(item => {
-            let option = document.createElement('option');
-
-            option.value = item.type + ' ' + item.caliber;
-            datalist.appendChild(option);
-        })
-    }
-}
-
-export default (props) => {
-    const dispatch = useDispatch();
-
-    let ammunition = props.ammunition !== undefined
-        ? props.ammunition.replace('_', ' ')
-        : '';
+    useEffect(() => {
+        if (values.name_ammunition !== '') {
+            props.handleSumAmmunitionValue(props.id, values);
+        }
+    }, [values]);
 
     return (
-        <div className='grid grid-cols-7 items-center' data-id={props.id}>
-            <input
-                type='text'
-                className='form-input m-2 col-span-4'
-                name='name_ammunition'
-                list='ammunition_list'
-                onChange={e => getAmmunition(e)}
-                defaultValue={ammunition}
-                placeholder='Введіть тип боєприпасу'
-            />
-            <datalist id='ammunition_list'>
-
-            </datalist>
-            <input
-                className='form-input m-2 number col-span-2'
-                type='text'
-                name='number_ammunition'
-                defaultValue={props.value}
-                onChange={e => checkValue(e)}
-            />
-            <button
-                className='bg-gray-200 rounded-md h-8 w-8 col-start-7'
-                type='button'
-                onClick={() => {
-                    dispatch(deleteAmmunition(props))
+        <FormControl data-id={props.id} sx={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                margin: '10px',
+                alignItems: 'stretch',
+            }}>
+            <Autocomplete
+                options={ammunition}
+                onChange={(e, value) => {
+                    setFieldValue(
+                        "name_ammunition",
+                        value !== null
+                            ? `${value.type} ${value.caliber}`
+                            : values.name_ammunition
+                    );
                 }}
+                inputValue={values.name_ammunition}
+                getOptionLabel={(option) => `${option.type} ${option.caliber}`}
+                renderOption={(props, option) => (
+                    <Box component="li" sx={{mr: 2, flexShrink: 0}} {...props}>
+                        {option.type} {option.caliber}
+                    </Box>
+                )}
+                renderInput={(params) =>
+                    <TextField
+                        {...params}
+                        required
+                        name='name_ammunition'
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        label='Enter the type of ammunition'
+                        error={touched.name_ammunition && Boolean(errors.name_ammunition)}
+                        helperText={touched.name_ammunition && errors.name_ammunition}
+                    />
+                }
+                sx={{
+                    width: 305
+                }}
+            />
+            <TextField
+                name='number_ammunition'
+                value={values.number_ammunition}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.number_ammunition && Boolean(errors.number_ammunition)}
+                helperText={touched.number_ammunition && errors.number_ammunition}
+                sx={{
+                    width: 50
+                }}
+            />
+            <IconButton
+                aria-label="delete"
+                size="small"
+                onClick={() => props.handleRemove(props.id)}
+                sx={{height: 50}}
             >
-                <img src={closeIcons + '#close'} alt='remove'/>
-            </button>
-        </div>
+                <DeleteIcon/>
+            </IconButton>
+        </FormControl>
     )
 }
+
+AmmunitionInput.propTypes = {
+    id: PropTypes.number,
+    ammunition: PropTypes.string,
+    value: PropTypes.string,
+    handleRemove: PropTypes.func,
+    handleSumAmmunitionValue: PropTypes.func,
+}
+
+export default AmmunitionInput;
