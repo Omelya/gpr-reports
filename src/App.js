@@ -4,9 +4,8 @@ import Footer from "./container/Footer";
 import { Outlet } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import Container from '@mui/material/Container';
-import {CssBaseline} from "@mui/material";
+import {Box, CssBaseline} from "@mui/material";
 import './index.css';
-import Box from "@mui/material/Box";
 
 function App() {
     return (
