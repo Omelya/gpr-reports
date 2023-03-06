@@ -78,7 +78,7 @@ const Ammunition = (props) => {
             <Button
                 fullWidth
                 variant="contained"
-                type='button'
+                type="button"
                 onClick={() => {
                     ammunition.push({
                         name: '',
