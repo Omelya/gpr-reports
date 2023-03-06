@@ -1,9 +1,23 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import TableColumn from "./TableColumn";
-import DatePicker from "react-datepicker";
 import {getReportData} from "../../http/getData";
 import getStartDate from "../../../helpers/date/startDate";
 import convertDate from "../../../helpers/date/convertDate";
+import {
+    Box,
+    Button,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Paper,
+    Select, TableBody, TableCell,
+    TableContainer,
+    TableHead, TableRow,
+    TextField, Typography
+} from "@mui/material";
+import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
+import {DateTimePicker, LocalizationProvider} from "@mui/x-date-pickers";
+import {Spinner} from "../../Spinner/Spinner";
 
 const getReport = async () => {
     let dateFrom = document.getElementsByName('date_from')[0].value,
@@ -17,6 +31,13 @@ const getReport = async () => {
     });
 }
 
+const menuItem = [
+    {name: 'All reports', value: 'all'},
+    {name: 'ОР', value: 'ОР'},
+    {name: 'ГР', value: 'ГР'},
+    {name: 'ТО', value: 'ТО'},
+]
+
 const Report = () => {
     const [startDate, setStartDate] = useState(
         new Date(getStartDate())
@@ -27,181 +48,252 @@ const Report = () => {
     const [report, setReport] = useState(
         []
     );
+    const [typeReport, setTypeReport] = useState('all');
+    const [position, setPosition] = useState('');
+    const [load, setLoad] = useState(true);
 
     let startDay = convertDate(startDate),
         endDay = convertDate(endDate);
 
+    useEffect(() => {
+        if (report.length > 0) {
+            setPosition('');
+        } else {
+            setPosition('relative');
+        }
+
+        setLoad(false);
+    }, [report]);
+
     return (
         <>
-            <div className='flex flex-row-reverse'>
-                <div className='m-1'>
-                    <button
-                        onClick={() => getReport().then(
-                            response => {
-                                let reports = [],
-                                    n = 0
+            <Spinner loading={load}/>
+            <Box sx={{
+                position: position,
+                bottom: '381px',
+            }}>
+                <Paper sx={{
+                    display: 'flex',
+                    flexDirection: 'row-reverse',
+                    alignItems: 'center',
+                }}>
+                    <Box sx={{margin: '1rem'}} onClick={() => setLoad(true)}>
+                        <Button
+                            size="large"
+                            variant="contained"
+                            type='button'
+                            onClick={() => getReport().then(
+                                response => {
+                                    let reports = [],
+                                        n = 0
 
-                                for (let report in response.data) {
-                                    reports[n] = {[report]: response.data[report]};
+                                    for (let report in response.data) {
+                                        reports[n] = {[report]: response.data[report]};
 
-                                    n++;
+                                        n++;
+                                    }
+
+                                    setReport(reports);
                                 }
+                            )}
+                        >
+                            Create a report
+                        </Button>
+                    </Box>
+                    <Box sx={{margin: '1rem'}}>
+                        <LocalizationProvider dateAdapter={AdapterMoment}>
+                            <DateTimePicker
+                                disableMaskedInput
+                                label='End date of the reporting period'
+                                inputFormat='MMMM d, yyyy'
+                                value={endDate}
+                                onChange={(date) => setEndDate(date)}
+                                renderInput={(params) =>
+                                    <TextField
+                                        {...params}
+                                        name='date_to'
+                                    />
+                                }
+                            />
+                        </LocalizationProvider>
+                    </Box>
+                    <Box sx={{margin: '1rem'}}>
+                        <LocalizationProvider dateAdapter={AdapterMoment}>
+                            <DateTimePicker
+                                disableMaskedInput
+                                label='Start date of the reporting period'
+                                inputFormat='MMMM d, yyyy'
+                                value={startDate}
+                                onChange={(date) => setStartDate(date)}
+                                renderInput={(params) =>
+                                    <TextField
+                                        {...params}
+                                        name='date_from'
+                                    />
+                                }
+                            />
+                        </LocalizationProvider>
+                    </Box>
+                    <Box sx={{margin: '1rem'}}>
+                        <FormControl>
+                            <InputLabel id='reports_type'>Report type</InputLabel>
+                            <Select
+                                labelId='reports_type'
+                                label='Report type'
+                                name='reports_type'
+                                onChange={(e) => setTypeReport(e.target.value)}
+                                value={typeReport}
+                            >
+                                {
+                                    menuItem.map((item, key) =>
+                                        <MenuItem key={key} value={item.value}>
+                                            {item.name}
+                                        </MenuItem>
+                                    )
+                                }
+                            </Select>
+                        </FormControl>
+                    </Box>
+                </Paper>
+                <Typography component='hr' sx={{'borderBottom': 'solid 2px black'}}/>
+            </Box>
 
-                                setReport(reports)
-                            }
-                        )}
-                        className='bg-green-400 p-2 mt-6 rounded-lg'
-                    >
-                        Створити звіт
-                    </button>
-                </div>
-                <div className='m-1'>
-                    <p className='text-xs font-medium p-1'>Дата закінчення звітного періоду</p>
-                    <div className='text-center'>
-                        <DatePicker
-                            selected={endDate}
-                            onChange={(date) => setEndDate(date)}
-                            dateFormat="MMMM d, yyyy"
-                            name='date_to'
-                        />
-                    </div>
-                </div>
-                <div className='m-1'>
-                    <p className='text-xs font-medium p-1'>Дата початку звітного періоду</p>
-                    <div className='text-center'>
-                        <DatePicker
-                            selected={startDate}
-                            onChange={(date) => setStartDate(date)}
-                            dateFormat="MMMM d, yyyy"
-                            name='date_from'
-                        />
-                    </div>
-                </div>
-                <div className='m-1'>
-                    <p className='text-xs font-medium p-1'>Тип звіту</p>
-                    <select name='reports_type'>
-                        <option value='all'>Всі звіти</option>
-                        <option value='ОР'>ОР</option>
-                        <option value='ГР'>ГР</option>
-                        <option value='ТО'>ТО</option>
-                    </select>
-                </div>
-            </div>
-            <hr style={{'borderBottom': 'solid 2px black'}}/>
-            {report.length > 0 &&
-                <div className='flex flex-col place-items-center my-2 font-bold'>
-                    <h2 className='my-4'>
-                        Звіт за період з {startDay} по {endDay}
-                    </h2>
-                        <div>
-                            <table className='table-fixed flex'>
-                                <thead className='flex flex-col'>
-                                    <tr className='border-2'>
-                                        <th className='p-3'>
-                                            Тип завдання
-                                        </th>
-                                    </tr>
-                                    <tr className='border-2'>
-                                        <th>
-                                            <p>Виконано заявок</p>
-                                        </th>
-                                    </tr>
-                                    <tr className='border-2'>
-                                        <th>
-                                            <p>Проведено залучень</p>
-                                        </th>
-                                    </tr>
-                                    <tr className='border-2'>
-                                        <th>
-                                            <p>Обстеження, га</p>
-                                        </th>
-                                    </tr>
-                                    <tr className='flex'>
-                                        <th className='border-2 w-32'>
-                                            Знищено, од
-                                        </th>
-                                        <tr className='flex flex-col w-72'>
-                                            <th className='border-2'>
-                                                <p>Саморобний вибуховий пристрій</p>
-                                            </th>
-                                            <th className='border-2'>
-                                                <p>Протипіхотна міна</p>
-                                            </th>
-                                            <th className='border-2'>
-                                                <p>Протитанкова міна</p>
-                                            </th>
-                                            <th className='border-2'>
-                                                <p>Міна пастка</p>
-                                            </th>
-                                            <th className='border-2'>
-                                                <p>Протикорабельна міна</p>
-                                            </th>
-                                            <th className='border-2'>
-                                                <p>Реактивний боєприпас</p>
-                                            </th>
-                                            <th className='border-2'>
-                                                <p>Артилерійський снаряд</p>
-                                            </th>
-                                            <th className='border-2'>
-                                                <p>Мінометна міна</p>
-                                            </th>
-                                            <th className='border-2'>
-                                                <p>Граната</p>
-                                            </th>
-                                            <th className='border-2'>
-                                                <p>Авіаційна бомба</p>
-                                            </th>
-                                            <th className='border-2'>
-                                                <p>Касетний боєприпас</p>
-                                            </th>
-                                            <th className='border-2'>
-                                                <p>Касетний елемент</p>
-                                            </th>
-                                            <th className='border-2'>
-                                                <p>Торпеда</p>
-                                            </th>
-                                            <th className='border-2'>
-                                                <p>Підривник</p>
-                                            </th>
-                                            <th className='border-2'>
-                                                <p>Боєприпаси до стрілецької зброї</p>
-                                            </th>
-                                            <th className='border-2'>
-                                                <p>Вибухові речовини, порох</p>
-                                            </th>
-                                            <th className='border-2'>
-                                                <p>Інші ВНП</p>
-                                            </th>
-                                            <th className='border-2'>
-                                                <p>Всього, од.</p>
-                                            </th>
-                                        </tr>
-                                    </tr>
-                                    <tr className='flex'>
-                                        <th className='border-2 w-32'>
+
+            {
+                report.length > 0 &&
+                <>
+
+                    <Box sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        placeItems: 'center',
+                        marginTop: '0.5rem',
+                        marginBottom: '0.5rem',
+                    }}>
+                        <Typography
+                            component='h2'
+                            sx={{
+                                fontWeight: 700,
+                                marginTop: '1rem',
+                                marginBottom: '1rem',
+                            }}>
+                            Звіт за період з {startDay} по {endDay}
+                        </Typography>
+                        <Box>
+                            <TableContainer component={Paper} sx={{
+                                display: 'flex',
+                                overflow: 'hidden'
+                            }}>
+                                <TableHead>
+                                    <TableRow sx={{display: 'flex', flexDirection: 'column'}}>
+                                        <TableCell align="center" sx={{borderWidth: '2px'}}>
+                                            Task type
+                                        </TableCell>
+                                        <TableCell align="center" sx={{borderWidth: '2px', padding: '0.1rem'}}>
+                                            Application completed
+                                        </TableCell>
+                                        <TableCell align="center" sx={{borderWidth: '2px', padding: '0.1rem'}}>
+                                            Recruitment has been carried out
+                                        </TableCell>
+                                        <TableCell align="center" sx={{borderWidth: '2px', padding: '0.1rem'}}>
+                                            Survey, ga
+                                        </TableCell>
+                                    </TableRow>
+                                    <TableRow sx={{display: 'flex'}}>
+                                        <TableCell align='center' sx={{borderWidth: '2px', width: '8rem'}}>
+                                            Destroyed, pcs
+                                        </TableCell>
+                                        <TableRow sx={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            width: '18rem'
+                                        }}>
+                                            <TableCell align='center' sx={{borderWidth: '2px', padding: '0.1rem'}}>
+                                                Саморобний вибуховий пристрій
+                                            </TableCell>
+                                            <TableCell align='center' sx={{borderWidth: '2px', padding: '0.1rem'}}>
+                                                Протипіхотна міна
+                                            </TableCell>
+                                            <TableCell align='center' sx={{borderWidth: '2px', padding: '0.1rem'}}>
+                                                Протитанкова міна
+                                            </TableCell>
+                                            <TableCell align='center' sx={{borderWidth: '2px', padding: '0.1rem'}}>
+                                                Міна пастка
+                                            </TableCell>
+                                            <TableCell align='center' sx={{borderWidth: '2px', padding: '0.1rem'}}>
+                                                Протикорабельна міна
+                                            </TableCell>
+                                            <TableCell align='center' sx={{borderWidth: '2px', padding: '0.1rem'}}>
+                                                Реактивний боєприпас
+                                            </TableCell>
+                                            <TableCell align='center' sx={{borderWidth: '2px', padding: '0.1rem'}}>
+                                                Артилерійський снаряд
+                                            </TableCell>
+                                            <TableCell align='center' sx={{borderWidth: '2px', padding: '0.1rem'}}>
+                                                Мінометна міна
+                                            </TableCell>
+                                            <TableCell align='center' sx={{borderWidth: '2px', padding: '0.1rem'}}>
+                                                Граната
+                                            </TableCell>
+                                            <TableCell align='center' sx={{borderWidth: '2px', padding: '0.1rem'}}>
+                                                Авіаційна бомба
+                                            </TableCell>
+                                            <TableCell align='center' sx={{borderWidth: '2px', padding: '0.1rem'}}>
+                                                Касетний боєприпас
+                                            </TableCell>
+                                            <TableCell align='center' sx={{borderWidth: '2px', padding: '0.1rem'}}>
+                                                Касетний елемент
+                                            </TableCell>
+                                            <TableCell align='center' sx={{borderWidth: '2px', padding: '0.1rem'}}>
+                                                Торпеда
+                                            </TableCell>
+                                            <TableCell align='center' sx={{borderWidth: '2px', padding: '0.1rem'}}>
+                                                Підривник
+                                            </TableCell>
+                                            <TableCell align='center' sx={{borderWidth: '2px', padding: '0.1rem'}}>
+                                                Боєприпаси до стрілецької зброї
+                                            </TableCell>
+                                            <TableCell align='center' sx={{borderWidth: '2px', padding: '0.1rem'}}>
+                                                Вибухові речовини, порох
+                                            </TableCell>
+                                            <TableCell align='center' sx={{borderWidth: '2px', padding: '0.1rem'}}>
+                                                Інші ВНП
+                                            </TableCell>
+                                            <TableCell align='center' sx={{borderWidth: '2px', padding: '0.1rem'}}>
+                                                Всього, од.
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableRow>
+                                    <TableRow sx={{display: 'flex'}}>
+                                        <TableCell align='center' sx={{borderWidth: '2px', width: '8rem'}}>
                                             Витрачено
-                                        </th>
-                                        <tr className='flex flex-col w-72'>
-                                            <th className='border-2'>
-                                                <p>Тротил, кг</p>
-                                            </th>
-                                            <th className='border-2'>
-                                                <p>ЕД, од.</p>
-                                            </th>
-                                        </tr>
-                                    </tr>
-                                    <tr className='border-2'>
-                                        <th>
-                                            <p>Проведено навчань</p>
-                                        </th>
-                                    </tr>
-                                    <tr className='border-2'>
-                                        <th>
-                                            <p>Охоплено осіб</p>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className='flex'>
+                                        </TableCell>
+                                        <TableRow sx={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            width: '18rem'
+                                        }}>
+                                            <TableCell align='center' sx={{borderWidth: '2px', padding: '0.1rem'}}>
+                                                Тротил, кг
+                                            </TableCell>
+                                            <TableCell align='center' sx={{borderWidth: '2px', padding: '0.1rem'}}>
+                                                ЕД, од.
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableRow>
+                                    <TableRow sx={{display: 'flex', flexDirection: 'column'}}>
+                                        <TableCell sx={{borderWidth: '2px', padding: '0.1rem'}}>
+                                            Проведено навчань
+                                        </TableCell>
+                                        <TableCell sx={{borderWidth: '2px', padding: '0.1rem'}}>
+                                            Охоплено осіб
+                                        </TableCell>
+                                    </TableRow>
+                                    <TableRow sx={{borderWidth: '2px', padding: '0.1rem'}}>
+
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody sx={{display: 'flex'}}>
                                 {report.map((item, key) =>
                                     (
                                         <TableColumn
@@ -209,10 +301,11 @@ const Report = () => {
                                             key={key}
                                         />
                                     ))}
-                                </tbody>
-                            </table>
-                        </div>
-                </div>
+                                </TableBody>
+                            </TableContainer>
+                        </Box>
+                    </Box>
+                </>
             }
         </>
     )

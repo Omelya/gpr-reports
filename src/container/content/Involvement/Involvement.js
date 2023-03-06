@@ -6,7 +6,7 @@ import {Form, redirect} from "react-router-dom";
 import Ammunition from "./Ammunition/Ammunition";
 import {sendEngagementData} from "../../http/sendData";
 import PlaceExecutionInput from "./PlaceExecutionInput/PlaceExecutionInput";
-import InvolvementNumberReportInput from "./involvementNumberReportInput/InvolvementNumberReportInput";
+import InvolvementNumberReportInput from "./InvolvementNumberReportInput/InvolvementNumberReportInput";
 import StatusSelect from "./StatusSelect";
 import Datetime from "./Datetime";
 import {Alert, AlertTitle, Typography} from "@mui/material";
