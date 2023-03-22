@@ -122,7 +122,7 @@ const Overview = () => {
                     <>
                         <EnhancedToolbar
                             handleRemove={handleRemove}
-                            id={selected[0]}
+                            id={selected[0] ?? 0}
                             numSelected={selected.length}
                         />
                         <TableContainer component={Paper}>
