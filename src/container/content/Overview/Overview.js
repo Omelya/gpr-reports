@@ -1,28 +1,33 @@
-import React from "react";
-import {useState} from "react";
+import React, {useEffect, useState} from "react";
 import toast from 'react-hot-toast';
 import removeData from "../../http/removeData";
 import {getAllInvolvementData} from "../../http/getData";
-import {useLoaderData, Form, redirect} from "react-router-dom";
+import {useLoaderData, redirect} from "react-router-dom";
+import {
+    Box, Checkbox, Paper,
+    TableBody, TableCell,
+    TableContainer, TableRow, Typography
+} from "@mui/material";
+import EnhancedToolbar from "./EnhancedToolbar";
+import EnhancedTableHead from "./EnhancedTableHead";
+import Ammunition from "./Ammunition";
+import {Spinner} from "../../Spinner/Spinner";
 
 export async function loader() {
     const involvements = await getAllInvolvementData();
     return { involvements };
 }
 
-async function removeInvolvement(id) {
-    let order = document.getElementsByName('order')[0].value,
-        direction = document.getElementsByName('direction')[0].value;
-
-    return await removeData(id)
-        .then(() => {
+async function removeInvolvement(selectedId) {
+    selectedId.forEach((id) => (
+        removeData(id)
+            .then(() => {
                 toast.success('Report deleted');
-
-                return getAllInvolvementData(order, direction);
-        })
-        .catch( () =>
-            toast.error('The report was not deleted, please try again')
-        )
+            })
+            .catch( () =>
+                toast.error('The report was not deleted, please try again')
+            )
+    ))
 }
 
 export async function action({request}) {
@@ -32,155 +37,168 @@ export async function action({request}) {
     return redirect(`/involvement/${id}/edit`);
 }
 
-const Ammunition = (props) => {
-    let name = Object.keys(JSON.parse(props.ammunition)),
-        value = Object.values(JSON.parse(props.ammunition)),
-        list = [];
-
-        for (let n = 0; n < name.length; n++) {
-            list.push([name[n].split('_').join(' '), value[n]])
-        }
-
-    return(
-        list.map((item, keys) =>
-            <p key={keys}>{item[0]}: {item[1]}</p>
-        )
-    )
-}
-
-function sorting() {
-    let order = document.getElementsByName('order')[0].value,
-        direction = document.getElementsByName('direction')[0].value;
-
-    return getAllInvolvementData(order, direction)
+function sorting(orderBy, order) {
+    return getAllInvolvementData(orderBy, order);
 }
 
 const Overview = () => {
     const { involvements } = useLoaderData();
-    const [involvement, setInvolvement] = useState(involvements)
+    const [involvement, setInvolvement] = useState(involvements.data.data.attributes);
+    const [selected, setSelected] = useState([]);
+    const [orderBy, setOrderBy] = useState('date_notification');
+    const [order, setOrder] = useState('asc');
+    const [load, setLoad] = useState(true);
+
+    const changeOrder = (order) => {
+        setOrder(order);
+    }
+
+    const changeOrderBy = (orderBy) => {
+        setOrderBy(orderBy);
+    }
+
+    const handleAllSelected = (event) => {
+        if (event.target.checked) {
+            const allSelected = involvement.map((n) => n.id);
+            setSelected(allSelected);
+
+            return;
+        }
+
+        setSelected([]);
+    }
+
+    const handleClick = (id) => {
+        let selectedIndex = selected.indexOf(id),
+            newSelected = [];
+
+        if (selectedIndex === -1) {
+            newSelected = newSelected.concat(selected, id)
+        } else if (selectedIndex > -1) {
+            newSelected = newSelected.concat(
+                selected.slice(0, selectedIndex),
+                selected.slice(selectedIndex + 1)
+            );
+        }
+
+        setSelected(newSelected)
+    }
+
+    const isItemSelected = (id) => selected.indexOf(id) !== -1;
+
+    const handleRemove = () => {
+        setLoad(true);
+
+        removeInvolvement(selected)
+            .then(
+                () => setInvolvement(involvement.filter((item) => !selected.includes(item.id)))
+            );
+
+        setLoad(false);
+    }
+
+    useEffect(() => {
+        setLoad(true);
+
+        sorting(orderBy, order).then(
+            response => setInvolvement(response.data.data.attributes)
+        );
+
+        setLoad(false);
+    }, [order, orderBy]);
 
     return (
-        <div className='flex flex-col place-items-center'>
-            <div className='text-center my-2 font-bold'>
-                <h2>
-                    Таблиця залучень
-                </h2>
-            </div>
-            <div className='mb-2'>
-                <p className='p-1'>Сортування за</p>
-                <select name='order'>
-                    <option value='date_notification'>
-                        датою донесення
-                    </option>
-                    <option value='examined'>
-                        площею обстеження
-                    </option>
-                </select>
-                <select name='direction'>
-                    <option value='asc'>
-                        за зростанням
-                    </option>
-                    <option value='desc'>
-                        за зменшенням
-                    </option>
-                </select>
-                <button
-                    className='bg-green-400 p-2 ml-2 rounded-lg'
-                    onClick={() => sorting().then(
-                        response => setInvolvement(response)
-                )}>
-                    Сортувати
-                </button>
-            </div>
-            {
-                involvement.data.data.attributes.length > 0 &&
-                <table className='table-auto  border-2'>
-                    <thead>
-                    <tr className='border-2'>
-                        <th className='border-2'>
-                            Номер акту
-                        </th>
-                        <th className='border-2'>
-                            Номер донесення
-                        </th>
-                        <th className='border-2'>
-                            Дата виконання
-                        </th>
-                        <th className='border-2'>
-                            Тип завдання
-                        </th>
-                        <th className='border-2'>
-                            Місце виконання
-                        </th>
-                        <th className='border-2'>
-                            Обстежено
-                        </th>
-                        <th className='border-2'>
-                            Знайдено ВНП
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {
-                        involvement.data.data.attributes.map((involvement) => (
-                            <tr id={involvement.id} key={involvement.id} className='text-center border-2'>
-                                <td className='border-2'>
-                                    {involvement.act_code}
-                                </td>
-                                <td className='border-2'>
-                                    {involvement.report_code}
-                                </td>
-                                <td className='border-2'>
-                                    {involvement.date_notification}
-                                </td>
-                                <td className='border-2'>
-                                    {involvement.task_type.split('_').join(' ')}
-                                </td>
-                                <td className='border-2'>
-                                    {involvement.place_execution}
-                                </td>
-                                <td className='border-2'>
-                                    {involvement.examined} га
-                                </td>
-                                <td className='border-2'>
-                                    <Ammunition
-                                        ammunition={involvement.ammunition}
-                                    />
-                                </td>
-                                <td className=' grid grid-column-1'>
-                                    <Form method="post">
-                                        <button
-                                            type='submit'
-                                            name='id'
-                                            value={involvement.id}
-                                            className='border-2 bg-gray-200 hover:bg-gray-300 rounded-lg m-2'
-                                        >
-                                            Редагувати
-                                        </button>
-                                    </Form>
-                                    <button
+        <>
+            <Spinner loading={load}/>
+            <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                position: 'relative',
+                height: '85vh'
+            }}>
+
+                {
+                    involvement.length > 0 &&
+                    <>
+                        <EnhancedToolbar
+                            handleRemove={handleRemove}
+                            id={selected[0]}
+                            numSelected={selected.length}
+                        />
+                        <TableContainer component={Paper}>
+                            <EnhancedTableHead
+                                order={order}
+                                orderBy={orderBy}
+                                numSelected={selected.length}
+                                rowCount={involvement.length}
+                                changeOrder={changeOrder}
+                                changeOrderBy={changeOrderBy}
+                                handleAllSelected={handleAllSelected}
+                            />
+                            <TableBody>
+
+                                {
+                                involvement.map((involvement) => (
+                                    <TableRow
+                                        hover
                                         id={involvement.id}
-                                        className='border-2 bg-gray-200 hover:bg-gray-300 rounded-lg m-2'
-                                        onClick={() =>{
-                                            removeInvolvement(involvement.id).then(
-                                                response => setInvolvement(response)
-                                            )
-                                        }}
+                                        key={involvement.id}
+                                        tabIndex={-1}
+                                        role='checkbox'
+                                        onClick={() => handleClick(involvement.id)}
+                                        selected={isItemSelected(involvement.id)}
+                                        aria-checked={isItemSelected(involvement.id)}
                                     >
-                                        Видалити
-                                    </button>
-                                </td>
-                            </tr>
-                        ))
-                    }
-                    </tbody>
-                </table>
-            }
-            {
-                involvement.data.data.attributes.length === 0 &&
-                    <p className="text-center my-2 font-bold">Донесень немає</p>
-            }
-        </div>
+                                        <TableCell padding="checkbox">
+                                            <Checkbox
+                                                color="primary"
+                                                onClick={() => handleClick(involvement.id)}
+                                                checked={isItemSelected(involvement.id)}
+                                                inputProps={{
+                                                    'aria-labelledby': involvement.id,
+                                                }}
+                                            />
+                                        </TableCell>
+                                        <TableCell>
+                                            {involvement.act_code}
+                                        </TableCell>
+                                        <TableCell>
+                                            {involvement.report_code}
+                                        </TableCell>
+                                        <TableCell>
+                                            {involvement.date_notification}
+                                        </TableCell>
+                                        <TableCell>
+                                            {involvement.task_type.split('_').join(' ')}
+                                        </TableCell>
+                                        <TableCell>
+                                            {involvement.place_execution}
+                                        </TableCell>
+                                        <TableCell>
+                                            {involvement.examined} га
+                                        </TableCell>
+                                        <TableCell>
+                                            <Ammunition
+                                                ammunition={involvement.ammunition}
+                                            />
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            }
+                            </TableBody>
+                        </TableContainer>
+                    </>
+                }
+
+                {
+                    involvement.length === 0 &&
+                        <Typography textAlign='center' marginY='0.5rem' fontWeight='700'>
+                            There are no reports
+                        </Typography>
+                }
+
+            </Box>
+        </>
     )
 }
 
