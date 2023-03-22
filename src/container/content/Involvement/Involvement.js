@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import toast from "react-hot-toast";
 import {useSelector} from "react-redux";
 import PersonalSelect from "./PersonalSelect";
@@ -16,6 +16,7 @@ import Examined from "./Examined/Examined";
 import ExplosivesInput from "./Explosives/ExplosivesInput";
 import {Box, Button, Paper} from "@mui/material";
 import {useFormik} from "formik";
+import {Spinner} from "../../Spinner/Spinner";
 
 let errorsMessage;
 
@@ -103,6 +104,7 @@ const initialValues = {
 
 const Involvement = (props) => {
     const involvement = useSelector(state => state.involvement);
+    const [load, setLoad] = useState(true);
 
     const {
         values,
@@ -112,6 +114,8 @@ const Involvement = (props) => {
     });
 
     useEffect(() => {
+        setLoad(true);
+
         if (involvement.data) {
             setValues({
                 act_code: involvement.data.attributes.act_code,
@@ -132,6 +136,8 @@ const Involvement = (props) => {
                 all_ammunition: involvement.data.attributes.all_ammunition,
             });
         }
+        
+        setLoad(false);
     }, [involvement]);
 
     useEffect(() => {
@@ -142,6 +148,7 @@ const Involvement = (props) => {
 
     return (
         <>
+            <Spinner loading={load}/>
             <Box sx={{
                 display: 'flex',
                 flexDirection: 'column',

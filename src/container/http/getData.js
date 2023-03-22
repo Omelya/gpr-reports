@@ -2,6 +2,8 @@ import axios from "axios";
 import {getCsrfToken} from "./getCSRFToken";
 
 export function getAllInvolvementData(order = 'date_notification', direction = 'asc') {
+    axios.defaults.withCredentials = true;
+
     return getCsrfToken().then(() => {
         return axios({
             method: 'GET',
