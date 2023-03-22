@@ -63,7 +63,7 @@ const Report = () => {
             <Spinner loading={load}/>
             <Box sx={{
                 position: 'relative',
-                height: '91vh'
+                height:  report.length > 0 ? false : '91vh'
             }}>
                 <Paper sx={{
                     display: 'flex',
